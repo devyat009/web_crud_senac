@@ -37,6 +37,65 @@
           </button>
         </div>
       </div>
+      <div *ngIf="toggleCreate">
+  <div class="card p-4 shadow-sm mt-4" style="min-width: 350px; border-radius: 16px;">
+    <div class="card-body">
+      <form [formGroup]="createAccountForm" (ngSubmit)="onCreateAccount()">
+        <div class="mb-3 input-group">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-envelope"></i>
+          </span>
+          <input formControlName="email" type="email" class="form-control border-start-0" placeholder="Digite um e-mail" />
+        </div>
+        <div class="mb-3 input-group">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-key"></i>
+          </span>
+          <input formControlName="senha" type="password" class="form-control border-start-0" placeholder="Digite uma senha" />
+        </div>
+        <div class="mb-3 input-group">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-key"></i>
+          </span>
+          <input formControlName="confirmPassword" type="password" class="form-control border-start-0" placeholder="Repita a senha digitada" />
+        </div>
+        <div class="mb-3 input-group">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-credit-card-2-front"></i>
+          </span>
+          <input formControlName="cpf" type="text" class="form-control border-start-0" placeholder="Digite seu CPF" />
+        </div>
+        <div class="mb-3 input-group">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-telephone"></i>
+          </span>
+          <input formControlName="telefone" type="text" class="form-control border-start-0" placeholder="Digite seu telefone" />
+        </div>
+        <div class="mb-3 input-group">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-calendar"></i>
+          </span>
+          <input formControlName="dataNascimento" type="date" class="form-control border-start-0" placeholder="Data de nascimento" />
+        </div>
+        <div class="mb-3 text-center small">
+          Você está a um click de acessar nosso serviços.
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+          <button type="button" class="btn btn-light" (click)="toggleCreate = false">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <button type="submit" class="btn btn-teal px-4 fw-bold">
+            Criar Conta <i class="bi bi-arrow-right ms-2"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+      <div *ngIf="toggleForgot">
+
+      </div>
     </div>
   </div>
 </div>
