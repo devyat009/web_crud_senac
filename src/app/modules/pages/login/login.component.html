@@ -6,7 +6,9 @@
       </div>
     </div>
     <div class="col-md-5 d-flex align-items-center justify-content-center">
-      <div class="card p-4 shadow-sm" style="min-width: 350px; border-radius: 10px;">
+
+      <!-- Form Login -->
+      <div *ngIf="!toggleCreate && !toggleForgot" class="card p-4 shadow-sm" style="min-width: 350px; width: 500px; border-radius: 10px;">
         <div class="card-body">
           <h4 class="mb-4 text-center">Login</h4>
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -23,14 +25,14 @@
               <input id="senha" formControlName="senha" type="password" class="form-control border-start-0" placeholder="Digite sua senha cadastrada" />
             </div>
             <div class="mb-3 text-end">
-              <a href="#" class="small text-decoration-underline">esqueci minha senha...</a>
+              <a href="#" class="small text-decoration-underline" (click)="toggleForgot = !toggleForgot; $event.preventDefault()">esqueci minha senha...</a>
             </div>
             <button type="submit" class="btn btn-teal w-100 mb-3">
               Login <i class="bi bi-arrow-right ms-2"></i>
             </button>
 
-            <p-button label="Login" icon="pi pi-sign-in" iconPos="right" class="mb-3" >
-            </p-button>
+            <!-- <p-button label="Login" icon="pi pi-sign-in" iconPos="right" class="mb-3">
+            </p-button> -->
           </form>
           <div class="mb-2 mt-3 fw-semibold text-center">
             Ainda não é cadastrado? Se registre para desfrutar de nossos serviços.
@@ -40,65 +42,107 @@
           </button>
         </div>
       </div>
-      <div *ngIf="toggleCreate">
-  <div class="card p-4 shadow-sm mt-4" style="min-width: 350px; border-radius: 16px;">
-    <div class="card-body">
-      <form [formGroup]="createAccountForm" (ngSubmit)="onCreateAccount()">
-        <div class="mb-3 input-group">
-          <span class="input-group-text bg-white border-end-0">
-            <i class="bi bi-envelope"></i>
-          </span>
-          <input formControlName="email" type="email" class="form-control border-start-0" placeholder="Digite um e-mail" />
-        </div>
-        <div class="mb-3 input-group">
-          <span class="input-group-text bg-white border-end-0">
-            <i class="bi bi-key"></i>
-          </span>
-          <input formControlName="senha" type="password" class="form-control border-start-0" placeholder="Digite uma senha" />
-        </div>
-        <div class="mb-3 input-group">
-          <span class="input-group-text bg-white border-end-0">
-            <i class="bi bi-key"></i>
-          </span>
-          <input formControlName="confirmPassword" type="password" class="form-control border-start-0" placeholder="Repita a senha digitada" />
-        </div>
-        <div class="mb-3 input-group">
-          <span class="input-group-text bg-white border-end-0">
-            <i class="bi bi-credit-card-2-front"></i>
-          </span>
-          <input formControlName="cpf" type="text" class="form-control border-start-0" placeholder="Digite seu CPF" />
-        </div>
-        <div class="mb-3 input-group">
-          <span class="input-group-text bg-white border-end-0">
-            <i class="bi bi-telephone"></i>
-          </span>
-          <input formControlName="telefone" type="text" class="form-control border-start-0" placeholder="Digite seu telefone" />
-        </div>
-        <div class="mb-3 input-group">
-          <span class="input-group-text bg-white border-end-0">
-            <i class="bi bi-calendar"></i>
-          </span>
-          <input formControlName="dataNascimento" type="date" class="form-control border-start-0" placeholder="Data de nascimento" />
-        </div>
-        <div class="mb-3 text-center small">
-          Você está a um click de acessar nosso serviços.
-        </div>
-        <div class="d-flex justify-content-between align-items-center">
-          <button type="button" class="btn btn-light" (click)="toggleCreate = false">
-            <i class="bi bi-arrow-left"></i>
-          </button>
-          <button type="submit" class="btn btn-teal px-4 fw-bold">
-            Criar Conta <i class="bi bi-arrow-right ms-2"></i>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
-      <div *ngIf="toggleForgot">
-
+      <!-- Form create account -->
+      <div *ngIf="toggleCreate" class="card p-4 shadow-sm" style="min-width: 350px; width: 500px; border-radius: 10px;">
+        <div class="card-body">
+          <h4 class="mb-4 text-center">Criar Conta</h4>
+          <form [formGroup]="createAccountForm" (ngSubmit)="onCreateAccount()">
+            <div class="mb-3 input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-envelope"></i>
+              </span>
+              <input formControlName="email" type="email" class="form-control border-start-0" placeholder="Digite um e-mail" />
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-key"></i>
+              </span>
+              <input formControlName="senha" type="password" class="form-control border-start-0" placeholder="Digite uma senha" />
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-key"></i>
+              </span>
+              <input formControlName="confirmPassword" type="password" class="form-control border-start-0" placeholder="Repita a senha digitada" />
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-credit-card-2-front"></i>
+              </span>
+              <input formControlName="cpf" type="text" class="form-control border-start-0" placeholder="Digite seu CPF" />
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-telephone"></i>
+              </span>
+              <input formControlName="telefone" type="text" class="form-control border-start-0" placeholder="Digite seu telefone" />
+            </div>
+            <div class="mb-3">
+              <span>Data de nascimento</span>
+            </div>
+            <div class="mb-3 input-group">
+              <!-- <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-calendar"></i>
+              </span> -->
+              <input formControlName="dataNascimento" type="date" class="form-control border-start-0" placeholder="Data de nascimento" />
+            </div>
+            <div class="mb-3 text-center small">
+              Você está a um click de acessar nossos serviços.
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <button type="button" class="btn btn-light" (click)="toggleCreate = false">
+                <i class="bi bi-arrow-left me-2"></i> Voltar
+              </button>
+              <button type="submit" class="btn btn-teal px-4 fw-bold">
+                Criar Conta <i class="bi bi-arrow-right ms-2"></i>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
+
+      <!-- Form forgot password -->
+      <div *ngIf="toggleForgot && !toggleCreate" class="card p-4 shadow-sm" style="min-width: 350px; width: 500px; border-radius: 10px;">
+        <div class="card-body">
+          <h4 class="mb-4 text-center">Esqueci minha senha</h4>
+          <h6 class="mb-3 text-center">Para confirmar que é você é o dono da conta, forneça as informações usadas para sua conta:</h6>
+          <form [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPassword()">
+            <div class="mb-3 input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-envelope"></i>
+              </span>
+              <input formControlName="email" type="email" class="form-control border-start-0" placeholder="Digite o e-mail cadastrado" />
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-credit-card-2-front"></i>
+              </span>
+              <input formControlName="cpf" type="text" class="form-control border-start-0" placeholder="Digite o CPF cadastrado" />
+            </div>
+            <div class="mb-3">
+              <span>Data de nascimento</span>
+            </div>
+            <div class="mb-3 input-group">
+              <!-- <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-calendar"></i>
+              </span> -->
+              <input formControlName="dataNascimento" type="date" class="form-control border-start-0"
+                placeholder="Data de nascimento" />
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <button type="button" class="btn btn-light" (click)="toggleForgot = false">
+                <i class="bi bi-arrow-left me-2"></i> Voltar
+              </button>
+              <button type="submit" class="btn btn-teal px-4 fw-bold">
+                Enviar Link <i class="bi bi-arrow-right ms-2"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+        <!-- forgot password -->
+      </div>
+
     </div>
   </div>
 </div>

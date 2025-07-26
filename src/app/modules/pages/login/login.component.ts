@@ -35,6 +35,12 @@ export class LoginComponent {
     dataNascimento: new FormControl<string>('', [Validators.required]),
   });
 
+  forgotPasswordForm = new FormGroup({
+    email: new FormControl<string>('', [Validators.required, Validators.email]),
+    cpf: new FormControl<string>('', [Validators.required, Validators.pattern('^[0-9]{11}$')]),
+    dataNascimento: new FormControl<string>('', [Validators.required]),
+  });
+
   constructor() { }
 
   ngOnInit() {
@@ -53,6 +59,11 @@ export class LoginComponent {
 
   onCreateAccount() {
     console.log('ok');
+  }
+
+  onForgotPassword() {
+    // Lógica de recuperação de senha aqui
+    console.log('Recuperação de senha solicitada');
   }
 
 }
