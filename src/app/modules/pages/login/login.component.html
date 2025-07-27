@@ -11,7 +11,7 @@
       <div *ngIf="!toggleCreate && !toggleForgot" class="card p-4 shadow-sm" style="min-width: 350px; width: 500px; border-radius: 10px;">
         <div class="card-body">
           <h4 class="mb-4 text-center">Login</h4>
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
             <div class="mb-3 input-group">
               <span class="input-group-text bg-white border-end-0">
                 <i class="bi bi-envelope"></i>
@@ -27,7 +27,7 @@
             <div class="mb-3 text-end">
               <a href="#" class="small text-decoration-underline" (click)="toggleForgot = !toggleForgot; $event.preventDefault()">esqueci minha senha...</a>
             </div>
-            <button type="submit" (click)="onLogin()" class="btn btn-teal w-100 mb-3">
+            <button type="submit" class="btn btn-teal w-100 mb-3">
               Login <i class="bi bi-arrow-right ms-2"></i>
             </button>
 
@@ -102,7 +102,7 @@
               <button type="button" class="btn btn-light" (click)="toggleCreate = false">
                 <i class="bi bi-arrow-left me-2"></i> Voltar
               </button>
-              <button type="submit" (click)="onCreateAccount()" class="btn btn-teal px-4 fw-bold">
+              <button type="submit" class="btn btn-teal px-4 fw-bold">
                 Criar Conta <i class="bi bi-arrow-right ms-2"></i>
               </button>
             </div>

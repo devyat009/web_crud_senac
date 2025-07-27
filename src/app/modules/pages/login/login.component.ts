@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../../../shared/services/auth.service';
 import { CreateAccountRequestDto, LoginRequestDto } from './types/login.types';
 import { UserService } from '../../../shared/services/user.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -46,22 +47,13 @@ export class LoginComponent {
 
   constructor(
         private readonly authService: AuthService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private snackBar: MatSnackBar,
   ) {
   }
 
   ngOnInit() {
 
-  }
-
-  onSubmit() {
-    // Lógica de login aqui
-    // console.log(this.loginForm.value);
-    // if (this.loginForm.get('senha')?.value === '123456')
-    //   {
-    //     alert('O email teste@teste ja utiliza a senha 123456');
-    //     this.loginForm.reset();
-    // }
   }
 
   async onCreateAccount() {
@@ -70,11 +62,30 @@ export class LoginComponent {
       const createAccountRequest: CreateAccountRequestDto = this.createAccountForm.value as CreateAccountRequestDto;
       try {
         const response = await this.userService.createAccount(createAccountRequest);
-        console.log('Account created successfully:', response);
-        // redirect to home or dashboard (to do)
-      } catch (error) {
+        if (response.id_user) {
+          console.log('Account created successfully:', response);
+          this.snackBar.open('Conta criada com sucesso!', 'Fechar', {
+            duration: 3000,
+          });
+          this.createAccountForm.reset();
+          this.toggleCreate = false;
+        } else {
+          console.warn('Account creation failed:', response);
+          this.snackBar.open('Erro ao criar conta: ' + response.detail.message, 'Fechar', {
+            duration: 4200
+          });
+        }
+      } catch (error: any) {
         console.error('Account creation failed:', error);
+        const errorMessage = error?.error?.detail?.message || error?.message || 'Erro desconhecido';
+        this.snackBar.open('Erro ao criar conta: ' + errorMessage, 'Fechar', {
+          duration: 4200,
+        });
       }
+    } else {
+      this.snackBar.open('Por favor, preencha todos os campos corretamente.', 'Fechar', {
+        duration: 3000,
+      });
     }
   }
 
@@ -84,11 +95,24 @@ export class LoginComponent {
       const loginRequest: LoginRequestDto = this.loginForm.value as LoginRequestDto;
       try {
         const response = await this.authService.Login(loginRequest);
-        console.log('Login successful:', response);
-        // redirect to home or dashboard (to do)
-      } catch (error) {
-        console.error('Login failed:', error);
+        if (response.success) {
+          this.snackBar.open('Login realizado com sucesso!', 'Fechar', {
+            duration: 3000,
+          });
+          console.log('Login successful:', response);
+          // redirect to home or dashboard (to do)
+        }
+      } catch (error: any) {
+        console.error('Account creation failed:', error);
+        const errorMessage = error?.error?.detail?.message || error?.message || 'Erro desconhecido';
+        this.snackBar.open('Erro ao criar conta: ' + errorMessage, 'Fechar', {
+          duration: 4200,
+        });
       }
+    } else {
+      this.snackBar.open('Por favor, preencha todos os campos corretamente.', 'Fechar', {
+        duration: 3000,
+      });
     }
   }
 
