@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'bootstrap/dist/css/bootstrap.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+:root {
+  --p-button-bg: #009688;         /* Cor de fundo */
+  --p-button-text-color: #fff;    /* Cor do texto */
+  --p-button-border: none;        /* Borda */
+  --p-button-hover-bg: #00796b;   /* Cor de fundo ao passar o mouse */
+  --p-button-hover-text-color: #fff;
+  --p-button-border-radius: 8px;  /* Borda arredondada */
+}
+
+.p-button .p-button-outlined {
+  --p-button-bg: transparent;
+  --p-button-text-color: #009688;
+  --p-button-border: 2px solid #009688;
+  --p-button-hover-bg: #009688;
+  --p-button-hover-text-color: #fff;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
