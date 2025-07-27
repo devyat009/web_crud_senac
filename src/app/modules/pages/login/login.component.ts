@@ -100,6 +100,11 @@ export class LoginComponent {
             duration: 3000,
           });
           console.log('Login successful:', response);
+          localStorage.setItem('loggedInUser', JSON.stringify({
+            email: response.email,
+            user_id: response.user_id,
+            nome: response.nome
+          }));
           // redirect to home or dashboard (to do)
         }
       } catch (error: any) {
