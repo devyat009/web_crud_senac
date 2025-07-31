@@ -3,12 +3,12 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
 :root {
-  --p-button-bg: #009688;         /* Cor de fundo */
-  --p-button-text-color: #fff;    /* Cor do texto */
-  --p-button-border: none;        /* Borda */
-  --p-button-hover-bg: #00796b;   /* Cor de fundo ao passar o mouse */
+  --p-button-bg: #009688;
+  --p-button-text-color: #fff;
+  --p-button-border: none;
+  --p-button-hover-bg: #00796b; 
   --p-button-hover-text-color: #fff;
-  --p-button-border-radius: 8px;  /* Borda arredondada */
+  --p-button-border-radius: 8px;
 }
 
 .p-button .p-button-outlined {
@@ -21,3 +21,25 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.input-group input.ng-valid.ng-touched,
+.input-group input.ng-valid.ng-dirty {
+  border-color: #28a745 !important;
+  box-shadow: none;
+}
+
+.input-group input.ng-valid.ng-touched ~ .input-group-text,
+.input-group input.ng-valid.ng-dirty ~ .input-group-text {
+  border-color: #28a745 !important;
+}
+
+.input-group input:not(.ng-valid) ~ .input-group-text {
+  border-color: #28a745 !important;
+}
+
+.input-group .input-group-text.border-danger,
+.input-group input.ng-invalid.ng-touched,
+.input-group input.ng-invalid.ng-dirty {
+  border-color: #dc3545 !important;
+  box-shadow: none;
+}

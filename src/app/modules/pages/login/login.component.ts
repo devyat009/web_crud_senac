@@ -6,7 +6,7 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { CreateAccountRequestDto, LoginRequestDto } from './types/login.types';
 import { UserService } from '../../../shared/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -15,7 +15,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   imports: [
     NgIf,
     ReactiveFormsModule,
-    ButtonModule
+    ButtonModule,
+    CommonModule
   ]
 })
 export class LoginComponent {
@@ -61,6 +62,24 @@ export class LoginComponent {
     if (this.createAccountForm.valid) {
       const createAccountRequest: CreateAccountRequestDto = this.createAccountForm.value as CreateAccountRequestDto;
       try {
+        if (createAccountRequest.password !== createAccountRequest.confirm_password) {
+          this.snackBar.open('As senhas não coincidem.', 'Fechar', {
+            duration: 3000,
+          });
+          return;
+        }
+        if (createAccountRequest.cpf && createAccountRequest.cpf.length !== 11) {
+          this.snackBar.open('CPF deve ter 11 dígitos.', 'Fechar', {
+            duration: 3000,
+          });
+          return;
+        }
+        if (createAccountRequest.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(createAccountRequest.email)) {
+          this.snackBar.open('Email inválido.', 'Fechar', {
+            duration: 3000,
+          });
+          return;
+        }
         const response = await this.userService.createAccount(createAccountRequest);
         if (response.id_user) {
           console.log('Account created successfully:', response);
@@ -86,6 +105,12 @@ export class LoginComponent {
       this.snackBar.open('Por favor, preencha todos os campos corretamente.', 'Fechar', {
         duration: 3000,
       });
+      for (const control in this.createAccountForm.controls) {
+        const formControl = this.createAccountForm.get(control);
+        if (formControl && formControl.invalid) {
+          console.log(`Campo inválido: ${control}`);
+        }
+      }
     }
   }
 
@@ -124,6 +149,16 @@ export class LoginComponent {
   onForgotPassword() {
     // Password recovery logic
     console.log('Recuperação de senha solicitada');
+  }
+
+  isValid(controlName: string, form: FormGroup): boolean {
+    const control = form.get(controlName);
+    return !!( control && control.valid && (control.touched || control.dirty) &&  control.value );
+  }
+
+  isInvalid(controlName: string, form: FormGroup): boolean {
+    const control = form.get(controlName);
+    return !!( control && control.invalid && (control.touched || control.dirty) && control.value );
   }
 
 }
