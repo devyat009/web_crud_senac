@@ -8,24 +8,32 @@
     <div class="col-md-5 d-flex align-items-center justify-content-center">
 
       <!-- Form Login -->
-      <div *ngIf="!toggleCreate && !toggleForgot" class="card p-4 shadow-sm" style="min-width: 350px; width: 500px; border-radius: 10px;">
+      <div *ngIf="!toggleCreate$.value && !toggleForgot$.value" class="card p-4 shadow-sm"
+        style="min-width: 350px; width: 500px; border-radius: 10px;">
         <div class="card-body">
           <h4 class="mb-4 text-center">Login</h4>
           <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
             <div class="mb-3 input-group">
-              <span class="input-group-text bg-white border-end-0">
+              <span class="input-group-text bg-white border-end-0"
+              [ngClass]="{ 'border-success': isValid('email', loginForm), 'border-danger': isInvalid('email', loginForm) }">
                 <i class="bi bi-envelope"></i>
               </span>
-              <input id="email" formControlName="email" type="email" class="form-control border-start-0" placeholder="Digite o e-mail cadastrado" />
+              <input id="email" formControlName="email" type="email" class="form-control border-start-0"
+                placeholder="Digite o e-mail cadastrado"
+                [ngClass]="{ 'border-success': isValid('email', loginForm), 'border-danger': isInvalid('email', loginForm) }" />
             </div>
             <div class="mb-2 input-group">
-              <span class="input-group-text bg-white border-end-0">
+              <span class="input-group-text bg-white border-end-0"
+              [ngClass]="{ 'border-success': isValid('password', loginForm), 'border-danger': isInvalid('password', loginForm) }">
                 <i class="bi bi-key"></i>
               </span>
-              <input formControlName="password" type="password" class="form-control border-start-0" placeholder="Digite sua senha cadastrada" />
+              <input formControlName="password" type="password" class="form-control border-start-0"
+                placeholder="Digite sua senha cadastrada"
+                [ngClass]="{ 'border-success': isValid('password', loginForm), 'border-danger': isInvalid('password', loginForm) }" />
             </div>
             <div class="mb-3 text-end">
-              <a href="#" class="small text-decoration-underline" (click)="toggleForgot = !toggleForgot; $event.preventDefault()">esqueci minha senha...</a>
+              <a href="#" class="small text-decoration-underline"
+                (click)="setToggleForgot(!toggleForgot$.value); $event.preventDefault()">esqueci minha senha...</a>
             </div>
             <button type="submit" class="btn btn-teal w-100 mb-3">
               Login <i class="bi bi-arrow-right ms-2"></i>
@@ -37,54 +45,71 @@
           <div class="mb-2 mt-3 fw-semibold text-center">
             Ainda não é cadastrado? Se registre para desfrutar de nossos serviços.
           </div>
-          <button class="btn btn-outline-teal w-100" (click)="toggleCreate = !toggleCreate">
+          <button class="btn btn-outline-teal w-100" (click)="setToggleCreate(!toggleCreate$.value)">
             Criar Conta <i class="bi bi-arrow-right ms-2"></i>
           </button>
         </div>
       </div>
 
       <!-- Form create account -->
-      <div *ngIf="toggleCreate" class="card p-4 shadow-sm" style="min-width: 350px; width: 500px; border-radius: 10px;">
+      <div *ngIf="toggleCreate$.value" class="card p-4 shadow-sm" style="min-width: 350px; width: 500px; border-radius: 10px;">
         <div class="card-body">
           <h4 class="mb-4 text-center">Criar Conta</h4>
           <form [formGroup]="createAccountForm" (ngSubmit)="onCreateAccount()">
 
             <div class="mb-3 input-group">
-              <span class="input-group-text bg-white border-end-0" [ngClass]="{ 'border-success': isValid('nome', createAccountForm), 'border-danger': isInvalid('nome', createAccountForm) }">
+              <span class="input-group-text bg-white border-end-0"
+                [ngClass]="{ 'border-success': isValid('nome', createAccountForm), 'border-danger': isInvalid('nome', createAccountForm) }">
                 <i class="bi bi-person"></i>
               </span>
-              <input formControlName="nome" type="text" class="form-control border-start-0" placeholder="Digite seu nome" />
+              <input formControlName="nome" type="text" class="form-control border-start-0"
+                placeholder="Digite seu nome"
+                [ngClass]="{ 'border-success': isValid('nome', createAccountForm), 'border-danger': isInvalid('nome', createAccountForm) }" />
             </div>
 
             <div class="mb-3 input-group">
-              <span class="input-group-text bg-white border-end-0" [ngClass]="{ 'border-success': isValid('email', createAccountForm), 'border-danger': isInvalid('email', createAccountForm) }">
+              <span class="input-group-text bg-white border-end-0"
+                [ngClass]="{ 'border-success': isValid('email', createAccountForm), 'border-danger': isInvalid('email', createAccountForm) }">
                 <i class="bi bi-envelope"></i>
               </span>
-              <input formControlName="email" type="email" class="form-control border-start-0" placeholder="Digite um e-mail" />
+              <input formControlName="email" type="email" class="form-control border-start-0"
+                placeholder="Digite um e-mail"
+                [ngClass]="{ 'border-success': isValid('email', createAccountForm), 'border-danger': isInvalid('email', createAccountForm) }" />
             </div>
             <div class="mb-3 input-group">
-              <span class="input-group-text bg-white border-end-0" [ngClass]="{ 'border-success': isValid('password', createAccountForm), 'border-danger': isInvalid('password', createAccountForm) }">
+              <span class="input-group-text bg-white border-end-0"
+                [ngClass]="{ 'border-success': isValid('password', createAccountForm), 'border-danger': isInvalid('password', createAccountForm) }">
                 <i class="bi bi-key"></i>
               </span>
-              <input formControlName="password" type="password" class="form-control border-start-0" placeholder="Digite uma senha" />
+              <input formControlName="password" type="password" class="form-control border-start-0"
+                placeholder="Digite uma senha"
+                [ngClass]="{ 'border-success': isValid('password', createAccountForm), 'border-danger': isInvalid('password', createAccountForm) }" />
             </div>
             <div class="mb-3 input-group">
-              <span class="input-group-text bg-white border-end-0" [ngClass]="{ 'border-success': isValid('confirm_password', createAccountForm), 'border-danger': isInvalid('confirm_password', createAccountForm) }">
+              <span class="input-group-text bg-white border-end-0"
+                [ngClass]="{ 'border-success': isValid('confirm_password', createAccountForm), 'border-danger': isInvalid('confirm_password', createAccountForm) }">
                 <i class="bi bi-key"></i>
               </span>
-              <input formControlName="confirm_password" type="password" class="form-control border-start-0" placeholder="Repita a senha digitada" />
+              <input formControlName="confirm_password" type="password" class="form-control border-start-0"
+                placeholder="Repita a senha digitada"
+                [ngClass]="{ 'border-success': isValid('confirm_password', createAccountForm), 'border-danger': isInvalid('confirm_password', createAccountForm) }" />
             </div>
             <div class="mb-3 input-group">
-              <span class="input-group-text bg-white border-end-0" [ngClass]="{ 'border-success': isValid('cpf', createAccountForm), 'border-danger': isInvalid('cpf', createAccountForm) }">
+              <span class="input-group-text bg-white border-end-0"
+                [ngClass]="{ 'border-success': isValid('cpf', createAccountForm), 'border-danger': isInvalid('cpf', createAccountForm) }">
                 <i class="bi bi-credit-card-2-front"></i>
               </span>
-              <input formControlName="cpf" type="text" class="form-control border-start-0" placeholder="Digite seu CPF" />
+              <input formControlName="cpf" type="text" class="form-control border-start-0" placeholder="Digite seu CPF"
+                [ngClass]="{ 'border-success': isValid('cpf', createAccountForm), 'border-danger': isInvalid('cpf', createAccountForm) }" />
             </div>
             <div class="mb-3 input-group">
-              <span class="input-group-text bg-white border-end-0" [ngClass]="{ 'border-success': isValid('telefone', createAccountForm), 'border-danger': isInvalid('telefone', createAccountForm) }">
+              <span class="input-group-text bg-white border-end-0" [ngClass]="{ 'border-success': isValid('telefone', createAccountForm),
+                'border-danger': isInvalid('telefone', createAccountForm) }">
                 <i class="bi bi-telephone"></i>
               </span>
-              <input formControlName="telefone" type="text" class="form-control border-start-0" placeholder="Digite seu telefone" />
+              <input formControlName="telefone" type="text" class="form-control border-start-0"
+                placeholder="Digite seu telefone" [ngClass]="{ 'border-success': isValid('telefone', createAccountForm), 'border-danger'
+                            : isInvalid('telefone', createAccountForm) }" />
             </div>
             <div class="mb-3">
               <span>Data de nascimento</span>
@@ -93,13 +118,16 @@
               <!-- <span class="input-group-text bg-white border-end-0">
                 <i class="bi bi-calendar"></i>
               </span> -->
-              <input formControlName="data_nascimento" type="date" class="form-control border-start-0" placeholder="Data de nascimento" />
+              <input formControlName="data_nascimento" type="date" class="form-control border-start-0"
+                placeholder="Data de nascimento"
+                [ngClass]="{ 'border-success': isValid('data_nascimento', createAccountForm), 'border-danger'
+                          : isInvalid('data_nascimento', createAccountForm) }" />
             </div>
             <div class="mb-3 text-center small">
               Você está a um click de acessar nossos serviços.
             </div>
             <div class="d-flex justify-content-between align-items-center">
-              <button type="button" class="btn btn-light" (click)="toggleCreate = false">
+              <button type="button" class="btn btn-light" (click)="setToggleCreate(!toggleCreate$.value)">
                 <i class="bi bi-arrow-left me-2"></i> Voltar
               </button>
               <button type="submit" class="btn btn-teal px-4 fw-bold">
@@ -111,22 +139,26 @@
       </div>
 
       <!-- Form forgot password -->
-      <div *ngIf="toggleForgot && !toggleCreate" class="card p-4 shadow-sm" style="min-width: 350px; width: 500px; border-radius: 10px;">
+      <div *ngIf="toggleForgot$.value && !toggleCreate$.value" class="card p-4 shadow-sm"
+        style="min-width: 350px; width: 500px; border-radius: 10px;">
         <div class="card-body">
           <h4 class="mb-4 text-center">Esqueci minha senha</h4>
-          <h6 class="mb-3 text-center">Para confirmar que é você é o dono da conta, forneça as informações usadas para sua conta:</h6>
+          <h6 class="mb-3 text-center">Para confirmar que é você é o dono da conta, forneça as informações usadas para
+            sua conta:</h6>
           <form [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPassword()">
             <div class="mb-3 input-group">
               <span class="input-group-text bg-white border-end-0">
                 <i class="bi bi-envelope"></i>
               </span>
-              <input formControlName="email" type="email" class="form-control border-start-0" placeholder="Digite o e-mail cadastrado" />
+              <input formControlName="email" type="email" class="form-control border-start-0"
+                placeholder="Digite o e-mail cadastrado" />
             </div>
             <div class="mb-3 input-group">
               <span class="input-group-text bg-white border-end-0">
                 <i class="bi bi-credit-card-2-front"></i>
               </span>
-              <input formControlName="cpf" type="text" class="form-control border-start-0" placeholder="Digite o CPF cadastrado" />
+              <input formControlName="cpf" type="text" class="form-control border-start-0"
+                placeholder="Digite o CPF cadastrado" />
             </div>
             <div class="mb-3">
               <span>Data de nascimento</span>
@@ -139,7 +171,7 @@
                 placeholder="Data de nascimento" />
             </div>
             <div class="d-flex justify-content-between align-items-center">
-              <button type="button" class="btn btn-light" (click)="toggleForgot = false">
+              <button type="button" class="btn btn-light" (click)="setToggleForgot(!toggleForgot$.value)">
                 <i class="bi bi-arrow-left me-2"></i> Voltar
               </button>
               <button type="submit" class="btn btn-teal px-4 fw-bold">

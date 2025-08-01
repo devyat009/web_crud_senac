@@ -7,6 +7,7 @@ import { CreateAccountRequestDto, LoginRequestDto } from './types/login.types';
 import { UserService } from '../../../shared/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -26,8 +27,9 @@ export class LoginComponent {
     password: new FormControl<string>('', [Validators.required, Validators.minLength(6)]),
   });
 
-  toggleCreate = false;
-  toggleForgot = false;
+  toggleCreate$ = new BehaviorSubject<boolean>(false);
+  toggleForgot$ = new BehaviorSubject<boolean>(false);
+
 
   createAccountForm = new FormGroup({
     email: new FormControl<string>('', [Validators.required, Validators.email]),
@@ -47,10 +49,34 @@ export class LoginComponent {
   });
 
   constructor(
-        private readonly authService: AuthService,
-        private readonly userService: UserService,
-        private snackBar: MatSnackBar,
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+    private snackBar: MatSnackBar,
   ) {
+    this.toggleCreate$.subscribe(value => {
+      if (!value) {
+        this.createAccountForm.reset();
+        Object.values(this.createAccountForm.controls).forEach(control => {
+          control.setErrors(null);
+          control.markAsUntouched();
+          control.markAsPristine();
+        });
+        console.log('Create account form reset');
+      }
+    });
+
+
+    this.toggleForgot$.subscribe(value => {
+      if (!value) {
+        this.forgotPasswordForm.reset();
+        Object.values(this.forgotPasswordForm.controls).forEach(control => {
+          control.setErrors(null);
+          control.markAsUntouched();
+          control.markAsPristine();
+        });
+
+      }
+    });
   }
 
   ngOnInit() {
@@ -87,7 +113,7 @@ export class LoginComponent {
             duration: 3000,
           });
           this.createAccountForm.reset();
-          this.toggleCreate = false;
+          this.setToggleCreate(false);
         } else {
           console.warn('Account creation failed:', response);
           this.snackBar.open('Erro ao criar conta: ' + response.detail.message, 'Fechar', {
@@ -105,12 +131,12 @@ export class LoginComponent {
       this.snackBar.open('Por favor, preencha todos os campos corretamente.', 'Fechar', {
         duration: 3000,
       });
-      for (const control in this.createAccountForm.controls) {
-        const formControl = this.createAccountForm.get(control);
-        if (formControl && formControl.invalid) {
-          console.log(`Campo inválido: ${control}`);
+      Object.values(this.createAccountForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsTouched();
+          control.updateValueAndValidity();
         }
-      }
+      });
     }
   }
 
@@ -153,12 +179,20 @@ export class LoginComponent {
 
   isValid(controlName: string, form: FormGroup): boolean {
     const control = form.get(controlName);
-    return !!( control && control.valid && (control.touched || control.dirty) &&  control.value );
+    return !!( control && control.valid && (control.touched || control.dirty) );
   }
 
   isInvalid(controlName: string, form: FormGroup): boolean {
     const control = form.get(controlName);
-    return !!( control && control.invalid && (control.touched || control.dirty) && control.value );
+    return !!( control && control.invalid && (control.touched || control.dirty) );
+  }
+
+  setToggleCreate(value: boolean) {
+    this.toggleCreate$.next(value);
+  }
+
+  setToggleForgot(value: boolean) {
+    this.toggleForgot$.next(value);
   }
 
 }
