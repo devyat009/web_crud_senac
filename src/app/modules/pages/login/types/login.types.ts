@@ -38,9 +38,10 @@ export interface ForgotPasswordRequestDto {
   data_nascimento: string;
 }
 
-export interface ForgotPasswordResponseDto {
-  message: string;
-  resetToken?: string;
+export interface ChangePasswordRequestDto {
+  user_id: string;
+  password: string;
+  confirm_password: string;
 }
 
 export interface ApiErrorDto {

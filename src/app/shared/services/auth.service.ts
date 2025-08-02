@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../enviroments/enviroment';
+import { StorageService } from './storage.service';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -19,11 +20,12 @@ export class AuthService {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly storageService: StorageService
   ) {}
 
   get token() {
-    return window.localStorage.getItem('login@token');
+    return this.storageService.getItem('login@token');
   }
 
   checkCredentials(): boolean {
@@ -45,6 +47,21 @@ export class AuthService {
   }
 
   public Logout() {
+    this.storageService.removeItem('loggedInUser');
     this.router.navigate(['/']);
+  }
+
+  async ChangePassword(obj: any): Promise<any> {
+    const json = JSON.stringify(obj);
+    return await lastValueFrom(
+      this.http.put<any>(this.baseUrl + 'api/v1/auth/change-password', json, httpOptions)
+    );
+  }
+
+  async ConfirmDataForgotPassword(obj: any): Promise<any> {
+    const json = JSON.stringify(obj);
+    return await lastValueFrom(
+      this.http.post<any>(this.baseUrl + 'api/v1/auth/forgot-password', json, httpOptions)
+    );
   }
 }

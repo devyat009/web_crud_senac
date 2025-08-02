@@ -142,47 +142,82 @@
       <div *ngIf="toggleForgot$.value && !toggleCreate$.value" class="card p-4 shadow-sm"
         style="min-width: 350px; width: 500px; border-radius: 10px;">
         <div class="card-body">
-          <h4 class="mb-4 text-center">Esqueci minha senha</h4>
-          <h6 class="mb-3 text-center">Para confirmar que é você é o dono da conta, forneça as informações usadas para
-            sua conta:</h6>
-          <form [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPassword()">
-            <div class="mb-3 input-group">
-              <span class="input-group-text bg-white border-end-0">
-                <i class="bi bi-envelope"></i>
-              </span>
-              <input formControlName="email" type="email" class="form-control border-start-0"
-                placeholder="Digite o e-mail cadastrado" />
-            </div>
-            <div class="mb-3 input-group">
-              <span class="input-group-text bg-white border-end-0">
-                <i class="bi bi-credit-card-2-front"></i>
-              </span>
-              <input formControlName="cpf" type="text" class="form-control border-start-0"
-                placeholder="Digite o CPF cadastrado" />
-            </div>
-            <div class="mb-3">
-              <span>Data de nascimento</span>
-            </div>
-            <div class="mb-3 input-group">
-              <!-- <span class="input-group-text bg-white border-end-0">
-                <i class="bi bi-calendar"></i>
-              </span> -->
-              <input formControlName="data_nascimento" type="date" class="form-control border-start-0"
-                placeholder="Data de nascimento" />
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <button type="button" class="btn btn-light" (click)="setToggleForgot(!toggleForgot$.value)">
-                <i class="bi bi-arrow-left me-2"></i> Voltar
-              </button>
-              <button type="submit" class="btn btn-teal px-4 fw-bold">
-                Enviar Link <i class="bi bi-arrow-right ms-2"></i>
-              </button>
-            </div>
-          </form>
-        </div>
-        <!-- forgot password -->
-      </div>
+          <ng-container *ngIf="(forgotStep$ | async) === 1">
+            <h4 class="mb-4 text-center">Esqueci minha senha</h4>
+            <h6 class="mb-3 text-center">Para confirmar que é você é o dono da conta, forneça as informações usadas para
+              sua conta:</h6>
+            <form [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPassword()">
+              <div class="mb-3 input-group">
+                <span class="input-group-text bg-white border-end-0" [ngClass]="{ 'border-success': isValid('email', forgotPasswordForm),
+                      'border-danger': isInvalid('email', forgotPasswordForm) }">
+                  <i class="bi bi-envelope"></i>
+                </span>
+                <input formControlName="email" type="email" class="form-control border-start-0"
+                  placeholder="Digite o e-mail cadastrado" [ngClass]="{ 'border-success': isValid('email', forgotPasswordForm),
+                      'border-danger': isInvalid('email', forgotPasswordForm) }" />
+              </div>
+              <div class="mb-3 input-group">
+                <span class="input-group-text bg-white border-end-0" [ngClass]="{ 'border-success': isValid('cpf', forgotPasswordForm),
+                      'border-danger': isInvalid('cpf', forgotPasswordForm) }">
+                  <i class="bi bi-credit-card-2-front"></i>
+                </span>
+                <input formControlName="cpf" type="text" class="form-control border-start-0"
+                  placeholder="Digite o CPF cadastrado" [ngClass]="{ 'border-success': isValid('cpf', forgotPasswordForm),
+                      'border-danger': isInvalid('cpf', forgotPasswordForm) }" />
+              </div>
+              <div class="mb-3">
+                <span>Data de nascimento</span>
+              </div>
+              <div class="mb-3 input-group">
+                <input formControlName="data_nascimento" type="date" class="form-control border-start-0"
+                  placeholder="Data de nascimento" [ngClass]="{ 'border-success': isValid('data_nascimento', forgotPasswordForm),
+                      'border-danger': isInvalid('data_nascimento', forgotPasswordForm) }" />
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <button type="button" class="btn btn-light" (click)="setToggleForgot(!toggleForgot$.value)">
+                  <i class="bi bi-arrow-left me-2"></i> Voltar
+                </button>
+                <button type="submit" class="btn btn-teal px-4 fw-bold">
+                  Confirmar dados <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+              </div>
+            </form>
 
+          </ng-container>
+
+          <!-- forgot password -->
+          <ng-container *ngIf="(forgotStep$ | async) === 2">
+            <form [formGroup]="resetPasswordForm" (ngSubmit)="onResetPassword()">
+              <div class="mb-3 input-group">
+                <span class="input-group-text bg-white border-end-0"
+                  [ngClass]="{ 'border-success': isValid('password', resetPasswordForm), 'border-danger': isInvalid('password', resetPasswordForm) }">
+                  <i class="bi bi-key"></i>
+                </span>
+                <input formControlName="password" type="password" class="form-control border-start-0"
+                  placeholder="Digite sua nova senha"
+                  [ngClass]="{ 'border-success': isValid('password', resetPasswordForm), 'border-danger': isInvalid('password', resetPasswordForm) }" />
+              </div>
+              <div class="mb-3 input-group">
+                <span class="input-group-text bg-white border-end-0"
+                  [ngClass]="{ 'border-success': isValid('confirm_password', resetPasswordForm), 'border-danger': isInvalid('confirm_password', resetPasswordForm) }">
+                  <i class="bi bi-key"></i>
+                </span>
+                <input formControlName="confirm_password" type="password" class="form-control border-start-0"
+                  placeholder="Repita a senha digitada"
+                  [ngClass]="{ 'border-success': isValid('confirm_password', resetPasswordForm), 'border-danger': isInvalid('confirm_password', resetPasswordForm) }" />
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <button type="button" class="btn btn-light" (click)="backForgotStep()">
+                  <i class="bi bi-arrow-left me-2"></i> Voltar
+                </button>
+                <button type="submit" class="btn btn-teal px-4 fw-bold">
+                  Alterar senha <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+              </div>
+            </form>
+          </ng-container>
+        </div>
+      </div>
     </div>
   </div>
 </div>
