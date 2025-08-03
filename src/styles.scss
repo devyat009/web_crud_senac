@@ -2,13 +2,18 @@
 @import 'bootstrap/dist/css/bootstrap.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
+
+
+
 :root {
   --p-button-bg: #009688;
   --p-button-text-color: #fff;
   --p-button-border: none;
-  --p-button-hover-bg: #00796b; 
+  --p-button-hover-bg: #00796b;
   --p-button-hover-text-color: #fff;
   --p-button-border-radius: 8px;
+
+  --main-bg-color: #263238;
 }
 
 .p-button .p-button-outlined {
