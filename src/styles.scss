@@ -3,12 +3,12 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
 :root {
-  --p-button-bg: #009688;         /* Cor de fundo */
-  --p-button-text-color: #fff;    /* Cor do texto */
-  --p-button-border: none;        /* Borda */
-  --p-button-hover-bg: #00796b;   /* Cor de fundo ao passar o mouse */
+  --p-button-bg: #009688;
+  --p-button-text-color: #fff;
+  --p-button-border: none;
+  --p-button-hover-bg: #00796b; 
   --p-button-hover-text-color: #fff;
-  --p-button-border-radius: 8px;  /* Borda arredondada */
+  --p-button-border-radius: 8px;
 }
 
 .p-button .p-button-outlined {
@@ -21,3 +21,49 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.input-group input.ng-valid.ng-touched,
+.input-group input.ng-valid.ng-dirty {
+  border-color: #28a745 !important;
+  box-shadow: none;
+}
+
+.input-group input.ng-valid.ng-touched ~ .input-group-text,
+.input-group input.ng-valid.ng-dirty ~ .input-group-text {
+  border-color: #28a745 !important;
+}
+
+.input-group input:not(.ng-valid) ~ .input-group-text {
+  border-color: #28a745 !important;
+}
+
+
+.input-group input:focus {
+  border-color: #86b7fe ;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.input-group input:focus + .input-group-text,
+.input-group input:focus ~ .input-group-text {
+  border-color: #86b7fe;
+  box-shadow: none !important;
+}
+
+.input-group input:focus {
+  border-color: #86b7fe ;
+}
+.input-group .input-group-text {
+  transition: border-color 0.2s;
+}
+.input-group:focus-within .input-group-text {
+  border-color: #86b7fe ;
+}
+
+.input-group .form-control.border-danger,
+.input-group .form-control.border-danger:focus,
+.input-group .input-group-text.border-danger,
+.input-group .input-group-text.border-danger:focus {
+  border-color: #dc3545 !important;
+  box-shadow: none !important;
+}
