@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { StorageService } from '../../../shared/services/storage.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -62,7 +63,8 @@ export class LoginComponent {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private snackBar: MatSnackBar,
-    private readonly storageService: StorageService
+    private readonly storageService: StorageService,
+    private readonly router: Router
   ) {
     this.toggleCreate$.subscribe(value => {
       if (!value) {
@@ -162,12 +164,12 @@ export class LoginComponent {
             duration: 3000,
           });
           console.log('Login successful:', response);
-          this.storageService.setItem('login@loggedInUser', JSON.stringify({
+          this.storageService.setItem('loggedInUser', JSON.stringify({
             email: response.email,
             user_id: response.user_id,
             nome: response.nome
           }));
-          // redirect to home or dashboard (to do)
+          this.router.navigate(['/home']);
         }
       } catch (error: any) {
         console.error('Account creation failed:', error);

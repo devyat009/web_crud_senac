@@ -1,0 +1,52 @@
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
+import { environment } from '../../enviroments/enviroment';
+import { CreateAccountRequestDto } from '../../modules/pages/login/types/login.types';
+import { ProductDto } from '../../modules/pages/produtos/Types/ProductDto';
+
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type': 'application/json',
+  }),
+  params: new HttpParams(),
+};
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ProductService {
+  baseUrl = environment.urlApi;
+
+  constructor(
+    private readonly http: HttpClient,
+    private readonly router: Router
+  ) {}
+
+  async createProduct(obj: ProductDto): Promise<any> {
+    const json = JSON.stringify(obj);
+    return await lastValueFrom(
+      this.http.post<any>(this.baseUrl + 'api/v1/products', json, httpOptions)
+    )
+  }
+
+  async editProduct(obj: ProductDto): Promise<any> {
+    const json = JSON.stringify(obj);
+    return await lastValueFrom(
+      this.http.put<any>(this.baseUrl + 'api/v1/products', json, httpOptions)
+    );
+  }
+
+  async deleteProduct(idObj: string): Promise<any> {
+    return await lastValueFrom(
+      this.http.delete<any>(this.baseUrl + 'api/v1/products/' + idObj)
+    );
+  }
+
+  async listProduct(): Promise<any> {
+    return await lastValueFrom(
+      this.http.get<any>(this.baseUrl + 'api/v1/products')
+    );
+  }
+}

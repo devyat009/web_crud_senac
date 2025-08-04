@@ -1,0 +1,49 @@
+<div class="container-fluid min-vh-100" style="background: #263238;">
+
+  <!-- Content -->
+  <div class="container-fluid px-4 py-4">
+    <div class="bg-white rounded-4 shadow-sm p-4">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark-teal mb-0">Clientes</h3>
+        <button class="btn btn-success d-flex align-items-center gap-2" (click)="adicionarCliente()">
+          <span>Adicionar</span>
+          <i class="bi bi-plus-lg"></i>
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-dark-teal">
+            <tr>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>Email</th>
+              <th>Data Cadastro</th>
+              <th>Perfil</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cliente of clientes">
+              <td>{{ cliente.nome }}</td>
+              <td>{{ cliente.cpf }}</td>
+              <td>{{ cliente.email }}</td>
+              <td>{{ cliente.dataCadastro }}</td>
+              <td>{{ cliente.perfil }}</td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary me-2" (click)="editarCliente(cliente)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" (click)="excluirCliente(cliente)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
