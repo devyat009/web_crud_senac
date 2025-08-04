@@ -13,7 +13,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./home.component.scss'],
   standalone: true,
   imports: [
-    NgIf,
     ReactiveFormsModule,
     ButtonModule
   ]

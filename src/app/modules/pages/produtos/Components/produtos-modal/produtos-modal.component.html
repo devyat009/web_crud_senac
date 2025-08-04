@@ -1,0 +1,165 @@
+<div class="mat-dialog-container">
+  <div class="modal-header d-flex justify-content-between align-items-center p-3 bg-main-light text-white">
+    <h4 class="mb-0">{{ data.isEdit ? 'Editar Produto' : 'Adicionar' }}</h4>
+    <button type="button" class="btn-close btn-close-white" (click)="onCancel()"></button>
+  </div>
+
+  <div class="modal-body p-4">
+    <form [formGroup]="produtoForm" class="row g-3">
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('codigo_barras', produtoForm), 'border-danger': isInvalid('codigo_barras', produtoForm) }">
+            <i class="bi bi-upc-scan"></i>
+          </span>
+          <input type="text" class="form-control" formControlName="codigo_barras" placeholder="Código de barras *" minlength="8"
+            [ngClass]="{ 'border-success': isValid('codigo_barras', produtoForm), 'border-danger': isInvalid('codigo_barras', produtoForm) }">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('nome_item', produtoForm), 'border-danger': isInvalid('nome_item', produtoForm) }">
+            <i class="bi bi-calendar"></i>
+          </span>
+          <input type="text" class="form-control" formControlName="nome_item" placeholder="Nome do item *"
+            [ngClass]="{ 'border-success': isValid('nome_item', produtoForm), 'border-danger': isInvalid('nome_item', produtoForm) }">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('modelo', produtoForm), 'border-danger': isInvalid('modelo', produtoForm) }">
+            <i class="bi bi-calendar"></i>
+          </span>
+          <input type="text" class="form-control" formControlName="modelo" placeholder="Modelo *"
+            [ngClass]="{ 'border-success': isValid('modelo', produtoForm), 'border-danger': isInvalid('modelo', produtoForm) }">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('codigo_sku', produtoForm), 'border-danger': isInvalid('codigo_sku', produtoForm) }">
+            <i class="bi bi-upc-scan"></i>
+          </span>
+          <input type="text" class="form-control" formControlName="codigo_sku" placeholder="Código SKU"
+            [ngClass]="{ 'border-success': isValid('codigo_sku', produtoForm), 'border-danger': isInvalid('codigo_sku', produtoForm) }">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('categoria', produtoForm), 'border-danger': isInvalid('categoria', produtoForm) }">
+            <i class="bi bi-calendar"></i>
+          </span>
+          <select class="form-select" formControlName="categoria" [ngClass]="{ 'border-success': isValid('categoria', produtoForm), 'border-danger': isInvalid('categoria', produtoForm) }">
+            <option value="">Categoria *</option>
+            <option value="eletronicos">Eletrônicos</option>
+            <option value="roupas">Roupas</option>
+            <option value="casa">Casa</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('marca', produtoForm), 'border-danger': isInvalid('marca', produtoForm) }">
+            <i class="bi bi-calendar"></i>
+          </span>
+          <select class="form-select" formControlName="marca" [ngClass]="{ 'border-success': isValid('marca', produtoForm), 'border-danger': isInvalid('marca', produtoForm) }">
+            <option value="">Marca *</option>
+            <option value="nike">Nike</option>
+            <option value="adidas">Adidas</option>
+            <option value="samsung">Samsung</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('tamanho', produtoForm), 'border-danger': isInvalid('tamanho', produtoForm) }">
+            <i class="bi bi-file-text"></i>
+          </span>
+          <input type="text" class="form-control" formControlName="tamanho" placeholder="Tamanho"
+            [ngClass]="{ 'border-success': isValid('tamanho', produtoForm), 'border-danger': isInvalid('tamanho', produtoForm) }">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-calendar"></i>
+          </span>
+          <input type="text" class="form-control" formControlName="cor" placeholder="Cor">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('preco', produtoForm), 'border-danger': isInvalid('preco', produtoForm) }">
+            <i class="bi bi-cash-coin"></i>
+          </span>
+          <input type="number" class="form-control" formControlName="preco" placeholder="Preço *" step="0.01"
+            [ngClass]="{ 'border-success': isValid('preco', produtoForm), 'border-danger': isInvalid('preco', produtoForm) }">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('data', produtoForm), 'border-danger': isInvalid('data', produtoForm) }">
+            <i class="bi bi-calendar"></i>
+          </span>
+          <input type="date" class="form-control" formControlName="data" placeholder="Data"
+            [ngClass]="{ 'border-success': isValid('data', produtoForm), 'border-danger': isInvalid('data', produtoForm) }">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('quantidade', produtoForm), 'border-danger': isInvalid('quantidade', produtoForm) }">
+            <i class="bi bi-table"></i>
+          </span>
+          <input type="number" class="form-control" formControlName="quantidade" placeholder="Quantidade *"
+            [ngClass]="{ 'border-success': isValid('quantidade', produtoForm), 'border-danger': isInvalid('quantidade', produtoForm) }">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('quantidade_minima', produtoForm), 'border-danger': isInvalid('quantidade_minima', produtoForm) }">
+            <i class="bi bi-table"></i>
+          </span>
+          <input type="number" class="form-control" formControlName="quantidade_minima" placeholder="Quantidade mínima *"
+            [ngClass]="{ 'border-success': isValid('quantidade_minima', produtoForm), 'border-danger': isInvalid('quantidade_minima', produtoForm) }">
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('descricao', produtoForm), 'border-danger': isInvalid('descricao', produtoForm) }">
+            <i class="bi bi-file-text"></i>
+          </span>
+          <textarea class="form-control" formControlName="descricao" placeholder="Descrição *" rows="3"
+            [ngClass]="{ 'border-success': isValid('descricao', produtoForm), 'border-danger': isInvalid('descricao', produtoForm) }"></textarea>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="input-group">
+          <span class="input-group-text" [ngClass]="{ 'border-success': isValid('observacoes', produtoForm), 'border-danger': isInvalid('observacoes', produtoForm) }">
+            <i class="bi bi-file-text"></i>
+          </span>
+          <textarea class="form-control" formControlName="observacoes" placeholder="Observações" rows="3"
+            [ngClass]="{ 'border-success': isValid('observacoes', produtoForm), 'border-danger': isInvalid('observacoes', produtoForm) }"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer p-3 d-flex justify-content-center">
+    <button type="button" class="btn btn-teal px-4" (click)="onSave()" [disabled]="!produtoForm.valid">
+      {{ data.isEdit ? 'Atualizar Produto' : 'Adicionar Produto' }}
+    </button>
+  </div>
+
+</div>

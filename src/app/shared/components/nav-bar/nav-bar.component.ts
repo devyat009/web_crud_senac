@@ -22,10 +22,26 @@ export class NavBarComponent implements OnInit {
 
   ngOnInit(): void {
     // Logic to execute on component initialization
+    const currentRoute = this.router.url;
+    if(currentRoute.includes('/clientes')) {
+      this.activeTab = 'users';
+    } else if(currentRoute.includes('/produtos')) {
+      this.activeTab = 'menu';
+    }
   }
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
+    switch (tab) {
+      case 'users':
+        this.router.navigate(['/clientes']);
+        break;
+      case 'menu':
+        this.router.navigate(['/produtos']);
+        break;
+      default:
+        this.router.navigate(['/home']);
+    }
     console.log('Tab ativa:', tab);
   }
 

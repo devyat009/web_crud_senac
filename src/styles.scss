@@ -6,14 +6,46 @@
 
 
 :root {
-  --p-button-bg: #009688;
-  --p-button-text-color: #fff;
-  --p-button-border: none;
-  --p-button-hover-bg: #00796b;
   --p-button-hover-text-color: #fff;
   --p-button-border-radius: 8px;
-
   --main-bg-color: #263238;
+  --main-bg-color-light: #37474f;
+  --main-bg-color-dark: #1c313a;
+  --main-bg-color-teal: #006064;
+  --main-bg-color-teal-light: #00838f;
+  --main-bg-color-teal-dark: #004d40;
+}
+
+
+.bg-main {
+  background-color: var(--main-bg-color);
+}
+.bg-main-light {
+  background-color: var(--main-bg-color-light);
+}
+.bg-main-dark {
+  background-color: var(--main-bg-color-dark);
+}
+.bg-main-teal {
+  background-color: var(--main-bg-color-teal);
+}
+.bg-main-teal-light {
+  background-color: var(--main-bg-color-teal-light);
+}
+.bg-main-teal-dark {
+  background-color: var(--main-bg-color-teal-dark);
+}
+
+
+.btn-teal {
+  background-color: var(--main-bg-color-teal);
+  border-color: var(--main-bg-color-teal);
+  color: #fff;
+}
+.btn-teal:hover {
+  background-color: var(--main-bg-color-teal-dark);
+  border-color: var(--main-bg-color-teal-dark);
+  color: #fff;
 }
 
 .p-button .p-button-outlined {
