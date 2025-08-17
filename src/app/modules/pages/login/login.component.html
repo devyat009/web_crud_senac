@@ -99,7 +99,7 @@
                 [ngClass]="{ 'border-success': isValid('cpf', createAccountForm), 'border-danger': isInvalid('cpf', createAccountForm) }">
                 <i class="bi bi-credit-card-2-front"></i>
               </span>
-              <input formControlName="cpf" type="text" class="form-control border-start-0" placeholder="Digite seu CPF"
+              <input formControlName="cpf" type="text" class="form-control border-start-0" mask="000.000.000-00" placeholder="Digite seu CPF"
                 [ngClass]="{ 'border-success': isValid('cpf', createAccountForm), 'border-danger': isInvalid('cpf', createAccountForm) }" />
             </div>
             <div class="mb-3 input-group">
@@ -107,7 +107,7 @@
                 'border-danger': isInvalid('telefone', createAccountForm) }">
                 <i class="bi bi-telephone"></i>
               </span>
-              <input formControlName="telefone" type="text" class="form-control border-start-0"
+              <input formControlName="telefone" type="text" mask="(00) 00000-0000" class="form-control border-start-0"
                 placeholder="Digite seu telefone" [ngClass]="{ 'border-success': isValid('telefone', createAccountForm), 'border-danger'
                             : isInvalid('telefone', createAccountForm) }" />
             </div>
@@ -161,7 +161,7 @@
                       'border-danger': isInvalid('cpf', forgotPasswordForm) }">
                   <i class="bi bi-credit-card-2-front"></i>
                 </span>
-                <input formControlName="cpf" type="text" class="form-control border-start-0"
+                <input formControlName="cpf" type="text" mask="000.000.000-00" class="form-control border-start-0"
                   placeholder="Digite o CPF cadastrado" [ngClass]="{ 'border-success': isValid('cpf', forgotPasswordForm),
                       'border-danger': isInvalid('cpf', forgotPasswordForm) }" />
               </div>

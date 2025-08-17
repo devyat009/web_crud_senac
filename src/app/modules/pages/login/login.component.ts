@@ -10,6 +10,8 @@ import { CommonModule } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { StorageService } from '../../../shared/services/storage.service';
 import { Router } from '@angular/router';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -19,8 +21,9 @@ import { Router } from '@angular/router';
     NgIf,
     ReactiveFormsModule,
     ButtonModule,
-    CommonModule
-  ]
+    CommonModule,
+    NgxMaskDirective
+  ],
 })
 export class LoginComponent {
 

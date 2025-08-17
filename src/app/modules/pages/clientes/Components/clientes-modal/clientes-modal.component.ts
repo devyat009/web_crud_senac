@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClienteService } from '../../../../../shared/services/cliente.service';
 import { ClienteDto } from '../../Types/ClienteDto';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 export interface ClienteModalData {
   cliente?: ClienteDto;
@@ -25,7 +26,7 @@ export interface ClienteModalData {
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatInputModule
+    NgxMaskDirective,
   ]
 })
 export class ClientesModalComponent implements OnInit {

@@ -6,6 +6,7 @@ import { ClienteService } from '../../../shared/services/cliente.service';
 import { ClienteDto } from './Types/ClienteDto';
 import { ClientesModalComponent } from './Components/clientes-modal/clientes-modal.component';
 import { ConfirmModalComponent, ConfirmModalData } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-clientes',
@@ -14,6 +15,7 @@ import { ConfirmModalComponent, ConfirmModalData } from '../../../shared/compone
   standalone: true,
   imports: [
     CommonModule,
+    MatInputModule
   ]
 })
 export class ClientesComponent implements OnInit {
