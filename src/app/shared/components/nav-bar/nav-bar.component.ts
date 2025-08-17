@@ -1,7 +1,8 @@
 import { NgIf } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { NavigationEnd, Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
+import { filter } from "rxjs";
 
 @Component ({
   selector: 'app-nav-bar',
@@ -22,12 +23,12 @@ export class NavBarComponent implements OnInit {
 
   ngOnInit(): void {
     // Logic to execute on component initialization
-    const currentRoute = this.router.url;
-    if(currentRoute.includes('/clientes')) {
-      this.activeTab = 'users';
-    } else if(currentRoute.includes('/produtos')) {
-      this.activeTab = 'menu';
-    }
+    this.setActiveTabByUrl(this.router.url);
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.setActiveTabByUrl(event.urlAfterRedirects || event.url);
+      });
   }
 
   setActiveTab(tab: string): void {
@@ -39,10 +40,25 @@ export class NavBarComponent implements OnInit {
       case 'menu':
         this.router.navigate(['/produtos']);
         break;
+      case 'home':
+        this.router.navigate(['/home']);
+        break;
       default:
         this.router.navigate(['/home']);
     }
     console.log('Tab ativa:', tab);
+  }
+
+  setActiveTabByUrl(url: string): void {
+    if (url.includes('/clientes')) {
+      this.activeTab = 'users';
+    } else if (url.includes('/produtos')) {
+      this.activeTab = 'menu';
+    } else if (url.includes('/home')) {
+      this.activeTab = 'home';
+    } else {
+      this.activeTab = '';
+    }
   }
 
   logout(): void {
