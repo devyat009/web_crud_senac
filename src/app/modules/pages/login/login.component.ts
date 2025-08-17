@@ -169,6 +169,7 @@ export class LoginComponent {
             user_id: response.user_id,
             nome: response.nome
           }));
+          this.storageService.loggedInSubject.next(true);
           this.router.navigate(['/home']);
         }
       } catch (error: any) {

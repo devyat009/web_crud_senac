@@ -46,7 +46,7 @@ export class NavBarComponent implements OnInit {
   }
 
   logout(): void {
-    // this.authService.Logout();
+    this.authService.Logout();
     console.log('Usuário deslogado, redirecionando para a página inicial');
   }
 
