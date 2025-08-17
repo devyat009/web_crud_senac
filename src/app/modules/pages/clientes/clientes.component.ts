@@ -7,6 +7,7 @@ import { ClienteDto } from './Types/ClienteDto';
 import { ClientesModalComponent } from './Components/clientes-modal/clientes-modal.component';
 import { ConfirmModalComponent, ConfirmModalData } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { MatInputModule } from '@angular/material/input';
+import { NgxMaskPipe } from 'ngx-mask';
 
 @Component({
   selector: 'app-clientes',
@@ -15,7 +16,8 @@ import { MatInputModule } from '@angular/material/input';
   standalone: true,
   imports: [
     CommonModule,
-    MatInputModule
+    MatInputModule,
+    NgxMaskPipe
   ]
 })
 export class ClientesComponent implements OnInit {
