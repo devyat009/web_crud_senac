@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProdutosModalComponent } from './Components/produtos-modal/produtos-modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductService } from '../../../shared/services/product.service';
+import { ConfirmModalComponent, ConfirmModalData } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-produtos',
@@ -84,8 +85,17 @@ export class ProdutosComponent implements OnInit {
   }
 
   async excluirProduto(produto: any): Promise<void> {
-    const confirmacao = confirm('Tem certeza que deseja excluir este produto?');
-    if (confirmacao) {
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      width: '350px',
+      data: {
+        title: 'Excluir Produto',
+        message: 'Tem certeza que deseja excluir este produto?',
+        confirmText: 'Excluir',
+        cancelText: 'Cancelar'
+      } as ConfirmModalData
+    });
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (confirmed) {
       try {
         await this.productService.deleteProduct(produto.id);
         this.snackBar.open('Produto excluído com sucesso!', 'Fechar', {

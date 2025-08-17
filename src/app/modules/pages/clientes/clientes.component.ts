@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClienteService } from '../../../shared/services/cliente.service';
 import { ClienteDto } from './Types/ClienteDto';
 import { ClientesModalComponent } from './Components/clientes-modal/clientes-modal.component';
+import { ConfirmModalComponent, ConfirmModalData } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-clientes',
@@ -57,8 +58,17 @@ export class ClientesComponent implements OnInit {
   }
 
   async excluirCliente(cliente: ClienteDto): Promise<void> {
-    const confirmacao = confirm('Tem certeza que deseja excluir este cliente?');
-    if (confirmacao && cliente.id_client) {
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+          width: '350px',
+          data: {
+            title: 'Excluir Cliente',
+            message: 'Tem certeza que deseja excluir este cliente?',
+            confirmText: 'Excluir',
+            cancelText: 'Cancelar'
+          } as ConfirmModalData
+        });
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (confirmed && cliente.id_client) {
       try {
         await this.clienteService.deleteCliente(cliente.id_client);
         this.snackBar.open('Cliente excluído com sucesso!', 'Fechar', {
