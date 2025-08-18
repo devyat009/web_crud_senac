@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgModule } from '@angular/core';
 import { NavBarComponent } from '../../../shared/components/nav-bar/nav-bar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ProdutosModalComponent } from './Components/produtos-modal/produtos-modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductService } from '../../../shared/services/product.service';
 import { ConfirmModalComponent, ConfirmModalData } from '../../../shared/components/confirm-modal/confirm-modal.component';
-
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-produtos',
   templateUrl: './produtos.component.html',
@@ -14,11 +14,23 @@ import { ConfirmModalComponent, ConfirmModalData } from '../../../shared/compone
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
   ]
 })
 export class ProdutosComponent implements OnInit {
 
   produtos: any[] = [];
+  categorias: string[] = [
+    'Eletrônicos',
+    'Roupas',
+    'Casa'
+  ];
+  marcas: string[] = [];
+  filtroCategoria: string = '';
+  filtroMarca: string = '';
+  filtroSearch: string = '';
+  filtroPrecoMin: number | null = null;
+  filtroPrecoMax: number | null = null;
 
   constructor(
     private dialog: MatDialog,
@@ -112,7 +124,22 @@ export class ProdutosComponent implements OnInit {
     }
   }
 
-  aplicarFiltro(): void {
-    console.log('Aplicar filtros');
+  async aplicarFiltro(): Promise<void> {
+    const response = await this.productService.listProductFiltered({
+      categoria: this.filtroCategoria || undefined,
+      marca: this.filtroMarca || undefined,
+      search: this.filtroSearch || undefined,
+      // low_stock: true // se quiser filtrar por estoque baixo
+    });
+    console.log('Pesquisa realizada com sucesso:', response);
+    let produtos = response.data;
+    // todo backend price filter)
+    // if (this.filtroPrecoMin !== null) {
+    //   produtos = produtos.filter((p: any) => p.preco >= this.filtroPrecoMin);
+    // }
+    // if (this.filtroPrecoMax !== null) {
+    //   produtos = produtos.filter((p: any) => p.preco <= this.filtroPrecoMax);
+    // }
+    this.produtos = produtos;
   }
 }

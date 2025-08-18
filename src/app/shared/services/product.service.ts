@@ -49,4 +49,16 @@ export class ProductService {
       this.http.get<any>(this.baseUrl + 'api/v1/products')
     );
   }
+
+  async listProductFiltered(filters: { categoria?: string; marca?: string; search?: string; minPreco?: number; maxPreco?: number; low_stock?: boolean } = {}): Promise<any> {
+    let params = new HttpParams();
+    if (filters.categoria) params = params.set('categoria', filters.categoria);
+    if (filters.marca) params = params.set('marca', filters.marca);
+    if (filters.search) params = params.set('search', filters.search);
+    if (filters.low_stock) params = params.set('low_stock', 'true');
+    // to do: min max price
+    return await lastValueFrom(
+      this.http.get<any>(this.baseUrl + 'api/v1/products', { params })
+    );
+  }
 }
