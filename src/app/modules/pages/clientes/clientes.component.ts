@@ -5,6 +5,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClienteService } from '../../../shared/services/cliente.service';
 import { ClienteDto } from './Types/ClienteDto';
 import { ClientesModalComponent } from './Components/clientes-modal/clientes-modal.component';
+import { ConfirmModalComponent, ConfirmModalData } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { MatInputModule } from '@angular/material/input';
+import { NgxMaskPipe } from 'ngx-mask';
 
 @Component({
   selector: 'app-clientes',
@@ -13,6 +16,8 @@ import { ClientesModalComponent } from './Components/clientes-modal/clientes-mod
   standalone: true,
   imports: [
     CommonModule,
+    MatInputModule,
+    NgxMaskPipe
   ]
 })
 export class ClientesComponent implements OnInit {
@@ -57,8 +62,17 @@ export class ClientesComponent implements OnInit {
   }
 
   async excluirCliente(cliente: ClienteDto): Promise<void> {
-    const confirmacao = confirm('Tem certeza que deseja excluir este cliente?');
-    if (confirmacao && cliente.id_client) {
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+          width: '350px',
+          data: {
+            title: 'Excluir Cliente',
+            message: 'Tem certeza que deseja excluir este cliente?',
+            confirmText: 'Excluir',
+            cancelText: 'Cancelar'
+          } as ConfirmModalData
+        });
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (confirmed && cliente.id_client) {
       try {
         await this.clienteService.deleteCliente(cliente.id_client);
         this.snackBar.open('Cliente excluído com sucesso!', 'Fechar', {

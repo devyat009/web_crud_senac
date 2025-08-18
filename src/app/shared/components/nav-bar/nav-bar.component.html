@@ -2,6 +2,11 @@
   <div class="container-fluid d-flex justify-content-between align-items-center bg-white rounded-5 shadow-sm nav-bar-container ml-3">
     <!-- Left section with icons -->
     <div class="d-flex align-items-center gap-3">
+      <!-- Home icon -->
+      <button class="btn btn-nav btn-sm" [class.active]="activeTab === 'home'" (click)="setActiveTab('home')">
+        <i class="bi bi-house-door-fill fs-4"></i>
+      </button>
+
       <!-- Users icon -->
       <button class="btn btn-nav btn-sm" [class.active]="activeTab === 'users'" (click)="setActiveTab('users')">
         <i class="bi bi-people-fill fs-4"></i>
@@ -9,7 +14,7 @@
 
       <!-- Menu/List icon -->
       <button class="btn btn-nav btn-sm" [class.active]="activeTab === 'menu'" (click)="setActiveTab('menu')">
-        <i class="bi bi-list fs-4"></i>
+        <i class="bi bi-box-seam fs-4"></i>
       </button>
     </div>
 

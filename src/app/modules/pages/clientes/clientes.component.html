@@ -28,7 +28,7 @@
           <tbody>
             <tr *ngFor="let cliente of clientes">
               <td>{{ cliente.nome }}</td>
-              <td>{{ cliente.cpf }}</td>
+              <td>{{ cliente.cpf | mask:'000.000.000-00' }}</td>
               <td>{{ cliente.email }}</td>
               <td>{{ cliente.data_nascimento }}</td>
               <td>{{ cliente.perfil }}</td>
