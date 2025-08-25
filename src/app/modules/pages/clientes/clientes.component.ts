@@ -8,6 +8,7 @@ import { ClientesModalComponent } from './Components/clientes-modal/clientes-mod
 import { ConfirmModalComponent, ConfirmModalData } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { MatInputModule } from '@angular/material/input';
 import { NgxMaskPipe } from 'ngx-mask';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-clientes',
@@ -17,11 +18,14 @@ import { NgxMaskPipe } from 'ngx-mask';
   imports: [
     CommonModule,
     MatInputModule,
-    NgxMaskPipe
+    NgxMaskPipe,
+    FormsModule
   ]
 })
 export class ClientesComponent implements OnInit {
   clientes: ClienteDto[] = [];
+  filtroPesquisa: string = '';
+  clientesFiltrados: ClienteDto[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -39,6 +43,8 @@ export class ClientesComponent implements OnInit {
       const response = await this.clienteService.listCliente();
       if (response.success) {
         this.clientes = response.data;
+        this.clientesFiltrados = [...this.clientes]; // Inicializa com todos os clientes
+       // console.log('clientes carregados:', this.clientes);
       }
       console.log('clientes', this.clientes);
     } catch (error: any) {
@@ -86,5 +92,30 @@ export class ClientesComponent implements OnInit {
         });
       }
     }
+  }
+
+  aplicarFiltro(): void {
+    console.log('Aplicando filtro com termo:', this.filtroPesquisa);
+    console.log('Total de clientes:', this.clientes.length);
+
+    if (!this.filtroPesquisa || this.filtroPesquisa.trim() === '') {
+      this.clientesFiltrados = [...this.clientes];
+      return;
+    }
+
+    const termoPesquisa = this.filtroPesquisa.toLowerCase().trim();
+    const termoNumerico = termoPesquisa.replace(/\D/g, '');
+
+    this.clientesFiltrados = this.clientes.filter(cliente => {
+      const nome = (cliente.nome || '').toLowerCase();
+      const email = (cliente.email || '').toLowerCase();
+      const cpf = (cliente.cpf || '').replace(/\D/g, '');
+
+      const matchNome = nome.includes(termoPesquisa);
+      const matchEmail = email.includes(termoPesquisa);
+      const matchCpf = termoNumerico && cpf.includes(termoNumerico);
+
+      return matchNome || matchEmail || matchCpf;
+    });
   }
 }
