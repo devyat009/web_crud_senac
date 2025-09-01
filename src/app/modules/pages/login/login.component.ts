@@ -170,7 +170,8 @@ export class LoginComponent {
           this.storageService.setItem('loggedInUser', JSON.stringify({
             email: response.email,
             user_id: response.user_id,
-            nome: response.nome
+            nome: response.nome,
+            role: response.role
           }));
           this.storageService.loggedInSubject.next(true);
           this.router.navigate(['/home']);

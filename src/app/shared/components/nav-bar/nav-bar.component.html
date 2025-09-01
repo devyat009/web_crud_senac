@@ -7,15 +7,21 @@
         <i class="bi bi-house-door-fill fs-4"></i>
       </button>
 
-      <!-- Users icon -->
+      <!-- Users icon for clientes -->
       <button class="btn btn-nav btn-sm" [class.active]="activeTab === 'users'" (click)="setActiveTab('users')">
         <i class="bi bi-people-fill fs-4"></i>
       </button>
 
-      <!-- Menu/List icon -->
+      <!-- Menu/List icon for products -->
       <button class="btn btn-nav btn-sm" [class.active]="activeTab === 'menu'" (click)="setActiveTab('menu')">
         <i class="bi bi-box-seam fs-4"></i>
       </button>
+      <!-- Admin icon -->
+      <ng-container *ngIf="user.role === 'admin'">
+        <button class="btn btn-nav btn-sm" [class.active]="activeTab === 'admin'" (click)="setActiveTab('admin')">
+          <i class="bi bi-shield-lock fs-4"></i>
+        </button>
+      </ng-container>
     </div>
 
     <!-- Right section with logout -->
