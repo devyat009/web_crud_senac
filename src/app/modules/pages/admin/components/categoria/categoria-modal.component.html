@@ -1,0 +1,18 @@
+<div class="p-4">
+  <h5 class="mb-3 fw-bold text-dark-teal">Adicionar Categoria</h5>
+  <form [formGroup]="categoriaForm">
+    <mat-form-field appearance="fill" class="w-100 mb-3">
+      <mat-label>Nome da Categoria</mat-label>
+      <input matInput formControlName="nome" maxlength="50" placeholder="Digite o nome da categoria">
+      <mat-error *ngIf="categoriaForm.get('nome')?.hasError('required')">
+        O nome é obrigatório.
+      </mat-error>
+      <mat-error *ngIf="categoriaForm.get('nome')?.hasError('maxlength')">
+        Máximo de 50 caracteres.
+      </mat-error>
+    </mat-form-field>
+    <div class="d-flex justify-content-end gap-2">
+      <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+      <button mat-flat-button color="primary" type="button" (click)="onSave()" [disabled]="!categoriaForm.valid">Salvar</button>
+    </div>
+  </form>

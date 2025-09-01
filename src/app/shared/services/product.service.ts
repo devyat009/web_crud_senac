@@ -61,4 +61,39 @@ export class ProductService {
       this.http.get<any>(this.baseUrl + 'api/v1/products', { params })
     );
   }
+
+  async createBrand(nome_marca: string): Promise<any> {
+    const json = JSON.stringify({ nome_marca });
+    return await lastValueFrom(
+      this.http.post<any>(this.baseUrl + 'api/v1/products/brand', json, httpOptions)
+    );
+  }
+
+  async listBrand(): Promise<any> {
+    return await lastValueFrom(
+      this.http.get<any>(this.baseUrl + 'api/v1/products/brand')
+    );
+  }
+  async deleteBrand(id: string): Promise<any> {
+    return await lastValueFrom(
+      this.http.delete<any>(this.baseUrl + 'api/v1/products/brand/' + id)
+    );
+  }
+
+  async createCategory(nome_categoria: string): Promise<any> {
+    return await lastValueFrom(
+      this.http.post<any>(this.baseUrl + 'api/v1/products/category', JSON.stringify({ nome_categoria }), httpOptions)
+    );
+  }
+
+  async listCategory(): Promise<any> {
+    return await lastValueFrom(
+      this.http.get<any>(this.baseUrl + 'api/v1/products/category')
+    );
+  }
+  async deleteCategory(id: string): Promise<any> {
+    return await lastValueFrom(
+      this.http.delete<any>(this.baseUrl + 'api/v1/products/category/' + id)
+    );
+  }
 }

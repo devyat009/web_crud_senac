@@ -27,6 +27,10 @@ export const routes: Routes = [
     loadComponent: () => import('./modules/pages/produtos/produtos.component').then((m) => m.ProdutosComponent)
   },
   {
+    path: 'admin',
+    loadComponent: () => import('./modules/pages/admin/admin.component').then((m) => m.AdminComponent)
+  },
+  {
     path: 'not-found',
     loadComponent: () => import('./modules/pages/not-found/not-found.component').then((c) => c.NotFoundComponent)
   },

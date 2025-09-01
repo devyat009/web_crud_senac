@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 export class ProdutosComponent implements OnInit {
 
   produtos: any[] = [];
+  produtosFiltrados: any[] = [];
   categorias: string[] = [
     'Eletrônicos',
     'Roupas',
@@ -47,6 +48,7 @@ export class ProdutosComponent implements OnInit {
     try {
       const response = await this.productService.listProduct();
       this.produtos = response.data;
+      this.produtosFiltrados = [...this.produtos]; // Inicializa com todos os produtos
       console.log('Produtos listados com sucesso:', this.produtos);
     } catch (error:any) {
       console.error('Erro ao listar produtos:', error);
@@ -124,22 +126,58 @@ export class ProdutosComponent implements OnInit {
     }
   }
 
-  async aplicarFiltro(): Promise<void> {
-    const response = await this.productService.listProductFiltered({
-      categoria: this.filtroCategoria || undefined,
-      marca: this.filtroMarca || undefined,
-      search: this.filtroSearch || undefined,
-      // low_stock: true // se quiser filtrar por estoque baixo
+  aplicarFiltro(): void {
+    console.log('Aplicando filtro com termos:', {
+      search: this.filtroSearch,
+      categoria: this.filtroCategoria,
+      marca: this.filtroMarca,
+      precoMin: this.filtroPrecoMin,
+      precoMax: this.filtroPrecoMax
     });
-    console.log('Pesquisa realizada com sucesso:', response);
-    let produtos = response.data;
-    // todo backend price filter)
-    // if (this.filtroPrecoMin !== null) {
-    //   produtos = produtos.filter((p: any) => p.preco >= this.filtroPrecoMin);
-    // }
-    // if (this.filtroPrecoMax !== null) {
-    //   produtos = produtos.filter((p: any) => p.preco <= this.filtroPrecoMax);
-    // }
-    this.produtos = produtos;
+
+    this.produtosFiltrados = this.produtos.filter(produto => {
+      // Filtro por texto (nome, modelo, marca, descrição)
+      let matchTexto = true;
+      if (this.filtroSearch && this.filtroSearch.trim()) {
+        const termo = this.filtroSearch.toLowerCase().trim();
+        const nome = (produto.nome_item || '').toLowerCase();
+        const modelo = (produto.modelo || '').toLowerCase();
+        const marca = (produto.marca || '').toLowerCase();
+        const descricao = (produto.descricao || '').toLowerCase();
+        
+        matchTexto = nome.includes(termo) || 
+                    modelo.includes(termo) || 
+                    marca.includes(termo) || 
+                    descricao.includes(termo);
+      }
+
+      // Filtro por categoria
+      let matchCategoria = true;
+      if (this.filtroCategoria && this.filtroCategoria.trim()) {
+        matchCategoria = produto.categoria === this.filtroCategoria;
+      }
+
+      // Filtro por marca
+      let matchMarca = true;
+      if (this.filtroMarca && this.filtroMarca.trim()) {
+        matchMarca = produto.marca === this.filtroMarca;
+      }
+
+      // Filtro por preço mínimo
+      let matchPrecoMin = true;
+      if (this.filtroPrecoMin !== null && this.filtroPrecoMin > 0) {
+        matchPrecoMin = produto.preco >= this.filtroPrecoMin;
+      }
+
+      // Filtro por preço máximo
+      let matchPrecoMax = true;
+      if (this.filtroPrecoMax !== null && this.filtroPrecoMax > 0) {
+        matchPrecoMax = produto.preco <= this.filtroPrecoMax;
+      }
+
+      return matchTexto && matchCategoria && matchMarca && matchPrecoMin && matchPrecoMax;
+    });
+
+    console.log('Produtos filtrados:', this.produtosFiltrados.length);
   }
 }

@@ -1,0 +1,51 @@
+.admin-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center; // centraliza o ícone
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: width 0.2s, background 0.2s;
+  overflow: hidden;
+  position: relative;
+  font-size: 1.2rem;
+  .action-label {
+    opacity: 0;
+    margin-left: 0.5rem;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    font-size: 1rem;
+    font-weight: 500;
+    width: 0;
+  }
+}
+.admin-action-btn:hover {
+  width: 120px;
+  justify-content: flex-start; // alinha ícone e texto à esquerda ao expandir
+  .action-label {
+    opacity: 1;
+    width: auto;
+  }
+}
+.btn-add {
+  background: #009688;
+  color: #fff;
+}
+.btn-add:hover {
+  background: #00796b;
+}
+.btn-list {
+  background: #1976d2;
+  color: #fff;
+}
+.btn-list:hover {
+  background: #125ea2;
+}
+.btn-delete {
+  background: #e53935;
+  color: #fff;
+}
+.btn-delete:hover {
+  background: #b71c1c;
+}

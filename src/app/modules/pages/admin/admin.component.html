@@ -1,0 +1,105 @@
+<div class="container-fluid min-vh-100" style="background: #263238;">
+  <div class="container-fluid px-4 py-4">
+    <div class="row">
+      <!-- Ações rápidas -->
+      <div class="col-md-3 mb-4">
+        <div class="bg-white rounded-4 shadow-sm p-3 d-flex flex-column gap-4">
+          <!-- Marcas -->
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="fw-bold text-dark-teal me-2">
+              <i class="bi bi-bookmark-fill"></i> Marca
+            </span>
+            <div class="d-flex gap-2 ms-auto">
+              <div class="admin-action-btn btn-add" (click)="adicionarMarca()" title="Adicionar">
+                <i class="bi bi-plus-lg" style="margin-left: 8px;"></i>
+                <span class="action-label">Adicionar</span>
+              </div>
+              <div class="admin-action-btn btn-list" (click)="listarMarcas()" title="Listar">
+                <i class="bi bi-eye" style="margin-left: 8px;"></i>
+                <span class="action-label">Listar</span>
+              </div>
+              <!-- <div class="admin-action-btn btn-delete" (click)="excluirMarca()" title="Excluir">
+                <i class="bi bi-trash" style="margin-left: 8px;"></i>
+                <span class="action-label">Excluir</span>
+              </div> -->
+            </div>
+          </div>
+          <!-- Categorias -->
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="fw-bold text-dark-teal me-2">
+              <i class="bi bi-bookmark-fill"></i> Categoria
+            </span>
+            <div class="d-flex gap-2 ms-auto">
+              <div class="admin-action-btn btn-add" (click)="adicionarCategoria()" title="Adicionar">
+                <i class="bi bi-plus-lg" style="margin-left: 8px;"></i>
+                <span class="action-label">Adicionar</span>
+              </div>
+              <div class="admin-action-btn btn-list" (click)="listarCategorias()" title="Listar">
+                <i class="bi bi-eye" style="margin-left: 8px;"></i>
+                <span class="action-label">Listar</span>
+              </div>
+              <!-- <div class="admin-action-btn btn-delete" (click)="excluirCategoria()" title="Excluir">
+                <i class="bi bi-trash" style="margin-left: 8px;"></i>
+                <span class="action-label">Excluir</span>
+              </div> -->
+            </div>
+          </div>
+          <!-- Notificações de Estoque Baixo -->
+          <div>
+            <button class="btn btn-warning w-100 d-flex align-items-center justify-content-center gap-2"
+                    (click)="mostrarNotificacoes = !mostrarNotificacoes">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+              Notificações de Estoque Baixo
+            </button>
+          </div>
+          <!-- Outros botões de ação podem ser adicionados aqui -->
+        </div>
+      </div>
+
+      <!-- Notificações de estoque baixo (painel expansível) -->
+      <div class="col-md-9" *ngIf="mostrarNotificacoes">
+        <div class="bg-white rounded-4 shadow-sm p-4">
+          <h4 class="mb-3 text-dark-teal fw-bold">
+            <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+            Notificações de Estoque Baixo
+          </h4>
+          <div *ngIf="itensEstoqueBaixo.length === 0" class="alert alert-success">
+            Nenhum item com estoque baixo!
+          </div>
+          <div *ngIf="itensEstoqueBaixo.length > 0" class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-warning">
+                <tr>
+                  <th>Produto</th>
+                  <th>Categoria</th>
+                  <th>Quantidade</th>
+                  <th>Quantidade Mínima</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of itensEstoqueBaixo">
+                  <td>{{ item.nome_item }}</td>
+                  <td>{{ item.categoria }}</td>
+                  <td>{{ item.quantidade }}</td>
+                  <td>{{ item.quantidade_minima }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary" (click)="editarProduto(item)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="excluirProduto(item)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="alert alert-warning mt-3">
+              Atenção: Os itens acima estão com estoque igual ou abaixo do mínimo cadastrado.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

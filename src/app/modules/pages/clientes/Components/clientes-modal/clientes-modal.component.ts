@@ -123,4 +123,14 @@ export class ClientesModalComponent implements OnInit {
   onCancel(): void {
     this.dialogRef.close();
   }
+
+  isValid(controlName: string, form: FormGroup): boolean {
+    const control = form.get(controlName);
+    return !!( control && control.valid && (control.touched || control.dirty) );
+  }
+
+  isInvalid(controlName: string, form: FormGroup): boolean {
+    const control = form.get(controlName);
+    return !!( control && control.invalid && (control.touched || control.dirty) );
+  }
 }

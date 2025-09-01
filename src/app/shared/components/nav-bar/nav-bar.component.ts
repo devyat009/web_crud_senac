@@ -1,4 +1,4 @@
-import { NgIf } from "@angular/common";
+import { CommonModule, NgIf } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
@@ -9,10 +9,13 @@ import { filter } from "rxjs";
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss'],
   standalone: true,
-  imports: []
+  imports: [
+    CommonModule
+  ]
 })
 export class NavBarComponent implements OnInit {
   activeTab: string = 'users';
+  user: any;
 
   constructor(
     private router: Router,
@@ -22,6 +25,10 @@ export class NavBarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+    if(this.user.role === 'admin') {
+      // Logic to execute for admin users
+    }
     // Logic to execute on component initialization
     this.setActiveTabByUrl(this.router.url);
     this.router.events
@@ -42,6 +49,11 @@ export class NavBarComponent implements OnInit {
         break;
       case 'home':
         this.router.navigate(['/home']);
+        break;
+      case 'admin':
+        if (this.user.role === 'admin') {
+          this.router.navigate(['/admin']);
+        }
         break;
       default:
         this.router.navigate(['/home']);

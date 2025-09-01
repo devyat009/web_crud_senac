@@ -8,37 +8,50 @@
     <form [formGroup]="clienteForm" class="row g-3">
       <div class="col-md-6">
         <div class="input-group">
-          <input type="text" class="form-control" formControlName="nome" placeholder="Nome *">
+          <input type="text" class="form-control" formControlName="nome" placeholder="Nome *"
+          [ngClass]="{ 'border-success': isValid('nome', clienteForm), 'border-danger': isInvalid('nome', clienteForm) }">
         </div>
       </div>
       <div class="col-md-6">
         <div class="input-group">
-          <input type="text" class="form-control" mask="000.000.000-00" formControlName="cpf" placeholder="CPF *" minlength="11">
+          <input type="text" class="form-control" mask="000.000.000-00" formControlName="cpf" placeholder="CPF *" minlength="11"
+          [ngClass]="{ 'border-success': isValid('cpf', clienteForm), 'border-danger': isInvalid('cpf', clienteForm) }">
         </div>
       </div>
       <div class="col-md-6">
         <div class="input-group">
-          <input type="email" class="form-control" formControlName="email" placeholder="Email *">
+          <input type="email" class="form-control" formControlName="email" placeholder="Email *"
+          [ngClass]="{ 'border-success': isValid('email', clienteForm), 'border-danger': isInvalid('email', clienteForm) }">
         </div>
       </div>
       <div class="col-md-6">
         <div class="input-group">
-          <input type="text" class="form-control" mask="(00) 00000-0000" formControlName="telefone" placeholder="Telefone *">
+          <input type="text" class="form-control" mask="(00) 00000-0000" formControlName="telefone" placeholder="Telefone *"
+          [ngClass]="{ 'border-success': isValid('telefone', clienteForm), 'border-danger': isInvalid('telefone', clienteForm) }">
         </div>
       </div>
       <div class="col-md-6">
         <div class="input-group">
-          <input type="date" class="form-control" formControlName="data_nascimento" placeholder="Data de Nascimento *">
+          <input type="date" class="form-control" formControlName="data_nascimento" placeholder="Data de Nascimento *"
+          [ngClass]="{ 'border-success': isValid('data_nascimento', clienteForm), 'border-danger': isInvalid('data_nascimento', clienteForm) }">
         </div>
       </div>
       <div class="col-md-6">
         <div class="input-group">
-          <input type="text" class="form-control" formControlName="endereco" placeholder="Endereço *">
+          <input type="text" class="form-control" formControlName="endereco" placeholder="Endereço *"
+          [ngClass]="{ 'border-success': isValid('endereco', clienteForm), 'border-danger': isInvalid('endereco', clienteForm) }">
         </div>
       </div>
       <div class="col-md-6">
         <div class="input-group">
-          <input type="text" class="form-control" formControlName="perfil" placeholder="Perfil *">
+          <input type="text" class="form-control" formControlName="perfil" placeholder="Perfil *"
+          [ngClass]="{ 'border-success': isValid('perfil', clienteForm), 'border-danger': isInvalid('perfil', clienteForm) }">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="input-group">
+          <input type="text" class="form-control" mask="00.000.000/0000-00" formControlName="cnpj" placeholder="CNPJ"
+          [ngClass]="{ 'border-success': isValid('cnpj', clienteForm), 'border-danger': isInvalid('cnpj', clienteForm) }">
         </div>
       </div>
     </form>
