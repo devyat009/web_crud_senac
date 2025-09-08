@@ -64,7 +64,7 @@
               <tbody>
                 <tr *ngFor="let produto of produtosFiltrados">
                   <td>{{ produto.nome_item }}</td>
-                  <td>{{ produto.categoria }}</td>
+                  <td>{{ produto.nome_categoria }}</td>
                   <td>{{ produto.modelo }}</td>
                   <td>{{ produto.quantidade }}</td>
                   <td>{{ produto.preco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>

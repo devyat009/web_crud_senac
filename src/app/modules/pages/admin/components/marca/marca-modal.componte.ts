@@ -7,9 +7,6 @@ import { MatInputModule } from '@angular/material/input';
 import { ProductService } from '../../../../../shared/services/product.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-export interface MarcaModalData {
-  nome?: string;
-}
 
 @Component({
   selector: 'app-marca-modal',
@@ -28,27 +25,46 @@ export class MarcaModalComponent {
   marcaForm = new FormGroup({
     nome: new FormControl('', [Validators.required, Validators.maxLength(50)])
   });
+  isEdit: boolean = false;
+
   private snackBar =  inject(MatSnackBar);
 
   constructor(
     public dialogRef: MatDialogRef<MarcaModalComponent>,
     private productService: ProductService,
-    @Inject(MAT_DIALOG_DATA) public data: MarcaModalData
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    if (data?.nome) {
-      this.marcaForm.patchValue({ nome: data.nome });
+    if (data?.marca && data.marca.nome_marca) {
+      this.marcaForm.patchValue({ nome: data.marca.nome_marca });
     }
+    this.isEdit = data.isEdit;
+    console.warn('data', data);
   }
 
   async onSave(): Promise<void> {
     if (this.marcaForm.valid) {
       try {
-        const marcaResponse = await this.productService.createBrand(this.marcaForm.value.nome ?? '');
-        if (marcaResponse.success) {
-          this.snackBar.open('Marca criada com sucesso', 'Fechar', { duration: 3000 });
-          console.log('marcaResponse', marcaResponse);
+        if (this.isEdit) {
+          const marcaResponse = await this.productService.editBrand(this.data.marca.id_brand, this.marcaForm.value.nome ?? '');
+          if (marcaResponse.success) {
+            this.snackBar.open('Marca editada com sucesso', 'Fechar', { duration: 3000 });
+            console.log('marcaResponse', marcaResponse);
+          }
+          this.dialogRef.close(marcaResponse);
+          return;
         }
-        this.dialogRef.close(marcaResponse);
+        else {
+          const marcaResponse = await this.productService.createBrand(
+            this.marcaForm.value.nome ?? ''
+          );
+          if (marcaResponse.success) {
+            this.snackBar.open('Marca criada com sucesso', 'Fechar', {
+              duration: 3000,
+            });
+            console.log('marcaResponse', marcaResponse);
+          }
+          this.dialogRef.close(marcaResponse);
+        }
       } catch (error) {
         this.snackBar.open('Erro ao salvar marca', 'Fechar', { duration: 3000 });
         console.error('Erro ao salvar marca:', error);

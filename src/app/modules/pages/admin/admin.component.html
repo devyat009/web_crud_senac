@@ -14,7 +14,7 @@
                 <i class="bi bi-plus-lg" style="margin-left: 8px;"></i>
                 <span class="action-label">Adicionar</span>
               </div>
-              <div class="admin-action-btn btn-list" (click)="listarMarcas()" title="Listar">
+              <div class="admin-action-btn btn-list" (click)="toggleListarMarcas()" title="Listar">
                 <i class="bi bi-eye" style="margin-left: 8px;"></i>
                 <span class="action-label">Listar</span>
               </div>
@@ -34,7 +34,7 @@
                 <i class="bi bi-plus-lg" style="margin-left: 8px;"></i>
                 <span class="action-label">Adicionar</span>
               </div>
-              <div class="admin-action-btn btn-list" (click)="listarCategorias()" title="Listar">
+              <div class="admin-action-btn btn-list" (click)="toggleListarCategorias()" title="Listar">
                 <i class="bi bi-eye" style="margin-left: 8px;"></i>
                 <span class="action-label">Listar</span>
               </div>
@@ -47,7 +47,7 @@
           <!-- Notificações de Estoque Baixo -->
           <div>
             <button class="btn btn-warning w-100 d-flex align-items-center justify-content-center gap-2"
-                    (click)="mostrarNotificacoes = !mostrarNotificacoes">
+                    (click)="toggleNotificacoesEstoqueBaixo()">
               <i class="bi bi-exclamation-triangle-fill"></i>
               Notificações de Estoque Baixo
             </button>
@@ -83,7 +83,7 @@
                   <td>{{ item.categoria }}</td>
                   <td>{{ item.quantidade }}</td>
                   <td>{{ item.quantidade_minima }}</td>
-                  <td>
+                  <td class="d-flex gap-3">
                     <button class="btn btn-sm btn-outline-primary" (click)="editarProduto(item)">
                       <i class="bi bi-pencil"></i>
                     </button>
@@ -98,6 +98,102 @@
               Atenção: Os itens acima estão com estoque igual ou abaixo do mínimo cadastrado.
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Listar marcas -->
+      <div class="col-md-9" *ngIf="mostrarMarcas">
+        <div class="bg-white rounded-4 shadow-sm p-4">
+          <h4 class="mb-3 text-dark-teal fw-bold">
+            <i class="bi bi-bookmark-fill text-primary me-2"></i>
+            Lista de Marcas
+          </h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-primary">
+                <tr>
+                  <th>Nome</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let marca of marcasPaginadas">
+                  <td>{{ marca.nome_marca }}</td>
+                  <td class="d-flex gap-3">
+                    <button class="btn btn-sm btn-outline-primary" (click)="editarMarca(marca)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="excluirMarca(marca)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Paginação -->
+          <nav *ngIf="marcas.length > itensPorPagina" class="mt-3">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="paginaAtualMarcas === 1">
+                <button class="page-link" (click)="mudarPaginaMarcas(paginaAtualMarcas - 1)" [disabled]="paginaAtualMarcas === 1">Anterior</button>
+              </li>
+              <li class="page-item" *ngFor="let p of getPaginasArray(marcasPageCount); let i = index"
+                  [class.active]="paginaAtualMarcas === i + 1">
+                <button class="page-link" (click)="mudarPaginaMarcas(i + 1)">{{ i + 1 }}</button>
+              </li>
+              <li class="page-item" [class.disabled]="paginaAtualMarcas === marcasPageCount">
+                <button class="page-link" (click)="mudarPaginaMarcas(paginaAtualMarcas + 1)" [disabled]="paginaAtualMarcas === marcasPageCount">Próxima</button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Listar categorias -->
+      <div class="col-md-9" *ngIf="mostrarCategorias">
+        <div class="bg-white rounded-4 shadow-sm p-4">
+          <h4 class="mb-3 text-dark-teal fw-bold">
+            <i class="bi bi-bookmark-fill text-primary me-2"></i>
+            Lista de Categorias
+          </h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-primary">
+                <tr>
+                  <th>Nome</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let categoria of categoriasPaginadas">
+                  <td>{{ categoria.nome_categoria }}</td>
+                  <td class="d-flex gap-3">
+                    <button class="btn btn-sm btn-outline-primary" (click)="editarCategoria(categoria)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="excluirCategoria(categoria)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Paginação -->
+          <nav *ngIf="categorias.length > itensPorPagina" class="mt-3">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="paginaAtualCategorias === 1">
+                <button class="page-link" (click)="mudarPaginaCategorias(paginaAtualCategorias - 1)" [disabled]="paginaAtualCategorias === 1">Anterior</button>
+              </li>
+              <li class="page-item" *ngFor="let p of getPaginasArray(categoriasPageCount); let i = index"
+                  [class.active]="paginaAtualCategorias === i + 1">
+                <button class="page-link" (click)="mudarPaginaCategorias(i + 1)">{{ i + 1 }}</button>
+              </li>
+              <li class="page-item" [class.disabled]="paginaAtualCategorias === categoriasPageCount">
+                <button class="page-link" (click)="mudarPaginaCategorias(paginaAtualCategorias + 1)" [disabled]="paginaAtualCategorias === categoriasPageCount">Próxima</button>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>

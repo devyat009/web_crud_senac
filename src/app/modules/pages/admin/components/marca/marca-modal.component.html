@@ -1,5 +1,6 @@
 <div class="p-4">
-  <h5 class="mb-3 fw-bold text-dark-teal">Adicionar Marca</h5>
+  <h5 class="mb-3 fw-bold text-dark-teal" *ngIf="!isEdit">Adicionar Marca</h5>
+  <h5 class="mb-3 fw-bold text-dark-teal" *ngIf="isEdit">Editar Marca</h5>
   <form [formGroup]="marcaForm">
     <mat-form-field appearance="fill" class="w-100 mb-3">
       <mat-label>Nome da Marca</mat-label>

@@ -52,14 +52,21 @@ export class ProdutosModalComponent implements OnInit {
     observacoes: new FormControl('')
   });
 
+  categories: any[] = [];
+  brands: any[] = [];
+
   constructor(
     public dialogRef: MatDialogRef<ProdutosModalComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: ProdutoModalData
+    public data: any
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     console.log('modal data', this.data);
+
+    await this.getCategory();
+    await this.getBrands();
+
     if (this.data.isEdit && this.data.produto) {
       this.produtoForm.patchValue(this.data.produto);
     }
@@ -73,8 +80,8 @@ export class ProdutosModalComponent implements OnInit {
         nome_item: formValue.nome_item ?? '',
         modelo: formValue.modelo ?? '',
         codigo_sku: formValue.codigo_sku ?? '',
-        categoria: formValue.categoria ?? '',
-        marca: formValue.marca ?? '',
+        id_categoria: formValue.categoria ?? '',
+        id_marca: formValue.marca ?? '',
         tamanho: formValue.tamanho ?? '',
         cor: formValue.cor ?? '',
         preco: Number(formValue.preco) ?? 0,
@@ -84,6 +91,7 @@ export class ProdutosModalComponent implements OnInit {
         descricao: formValue.descricao ?? '',
         observacoes: formValue.observacoes ?? ''
       };
+      console.warn('produtoData', produtoData);
         // add
         if (!this.data.isEdit)
         {
@@ -164,4 +172,31 @@ export class ProdutosModalComponent implements OnInit {
     return !!( control && control.invalid && (control.touched || control.dirty) );
   }
 
+  async getCategory(): Promise<void> {
+    try {
+      const response = await this.productService.listCategory();
+      if (response.success) {
+        console.log('categories', response);
+        this.categories = response.data;
+      } else {
+        console.error('Failed to fetch categories:', response.message);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  }
+
+  async getBrands(): Promise<void> {
+    try {
+      const response = await this.productService.listBrand();
+      if (response.success) {
+        console.log('brands', response);
+        this.brands = response.data;
+      } else {
+        console.error('Failed to fetch brands:', response.message);
+      }
+    } catch (error) {
+      console.error('Error fetching brands:', error);
+    }
+  }
 }

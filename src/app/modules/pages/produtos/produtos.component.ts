@@ -82,7 +82,9 @@ export class ProdutosComponent implements OnInit {
       maxWidth: 'none',
       data: {
         produto: produto,
-        isEdit: true
+        isEdit: true,
+        categorias: this.categorias,
+        marcas: this.marcas
       }
     });
 
@@ -144,10 +146,10 @@ export class ProdutosComponent implements OnInit {
         const modelo = (produto.modelo || '').toLowerCase();
         const marca = (produto.marca || '').toLowerCase();
         const descricao = (produto.descricao || '').toLowerCase();
-        
-        matchTexto = nome.includes(termo) || 
-                    modelo.includes(termo) || 
-                    marca.includes(termo) || 
+
+        matchTexto = nome.includes(termo) ||
+                    modelo.includes(termo) ||
+                    marca.includes(termo) ||
                     descricao.includes(termo);
       }
 
