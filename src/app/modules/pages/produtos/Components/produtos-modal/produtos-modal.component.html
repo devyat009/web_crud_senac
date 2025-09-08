@@ -53,10 +53,8 @@
             <i class="bi bi-calendar"></i>
           </span>
           <select class="form-select" formControlName="categoria" [ngClass]="{ 'border-success': isValid('categoria', produtoForm), 'border-danger': isInvalid('categoria', produtoForm) }">
-            <option value="">Categoria *</option>
-            <option value="eletronicos">Eletrônicos</option>
-            <option value="roupas">Roupas</option>
-            <option value="casa">Casa</option>
+            <option value="" disabled>Categoria *</option>
+            <option *ngFor="let category of categories" [value]="category.id_category">{{ category.nome_categoria }}</option>
           </select>
         </div>
       </div>
@@ -67,10 +65,8 @@
             <i class="bi bi-calendar"></i>
           </span>
           <select class="form-select" formControlName="marca" [ngClass]="{ 'border-success': isValid('marca', produtoForm), 'border-danger': isInvalid('marca', produtoForm) }">
-            <option value="">Marca *</option>
-            <option value="nike">Nike</option>
-            <option value="adidas">Adidas</option>
-            <option value="samsung">Samsung</option>
+            <option value="" disabled>Marca *</option>
+            <option *ngFor="let brand of brands" [value]="brand.id_brand">{{ brand.nome_marca }}</option>
           </select>
         </div>
       </div>

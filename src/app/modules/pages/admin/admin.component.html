@@ -14,7 +14,7 @@
                 <i class="bi bi-plus-lg" style="margin-left: 8px;"></i>
                 <span class="action-label">Adicionar</span>
               </div>
-              <div class="admin-action-btn btn-list" (click)="listarMarcas()" title="Listar">
+              <div class="admin-action-btn btn-list" (click)="toggleListarMarcas()" title="Listar">
                 <i class="bi bi-eye" style="margin-left: 8px;"></i>
                 <span class="action-label">Listar</span>
               </div>
@@ -34,7 +34,7 @@
                 <i class="bi bi-plus-lg" style="margin-left: 8px;"></i>
                 <span class="action-label">Adicionar</span>
               </div>
-              <div class="admin-action-btn btn-list" (click)="listarCategorias()" title="Listar">
+              <div class="admin-action-btn btn-list" (click)="toggleListarCategorias()" title="Listar">
                 <i class="bi bi-eye" style="margin-left: 8px;"></i>
                 <span class="action-label">Listar</span>
               </div>
@@ -97,6 +97,72 @@
             <div class="alert alert-warning mt-3">
               Atenção: Os itens acima estão com estoque igual ou abaixo do mínimo cadastrado.
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Listar marcas -->
+      <div class="col-md-9" *ngIf="mostrarMarcas">
+        <div class="bg-white rounded-4 shadow-sm p-4">
+          <h4 class="mb-3 text-dark-teal fw-bold">
+            <i class="bi bi-bookmark-fill text-primary me-2"></i>
+            Lista de Marcas
+          </h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-primary">
+                <tr>
+                  <th>Nome</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let marca of marcas">
+                  <td>{{ marca.nome_marca }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary" (click)="editarMarca(marca)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="excluirMarca(marca)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Listar categorias -->
+      <div class="col-md-9" *ngIf="mostrarCategorias">
+        <div class="bg-white rounded-4 shadow-sm p-4">
+          <h4 class="mb-3 text-dark-teal fw-bold">
+            <i class="bi bi-bookmark-fill text-primary me-2"></i>
+            Lista de Categorias
+          </h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-primary">
+                <tr>
+                  <th>Nome</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let categoria of categorias">
+                  <td>{{ categoria.categoria }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary" (click)="editarCategoria(categoria)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="excluirCategoria(categoria)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

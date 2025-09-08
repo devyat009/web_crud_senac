@@ -52,17 +52,23 @@ export class ProdutosModalComponent implements OnInit {
     observacoes: new FormControl('')
   });
 
+  categories: any[] = [];
+  brands: any[] = [];
+
   constructor(
     public dialogRef: MatDialogRef<ProdutosModalComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: ProdutoModalData
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     console.log('modal data', this.data);
     if (this.data.isEdit && this.data.produto) {
       this.produtoForm.patchValue(this.data.produto);
     }
+
+    await this.getCategory();
+    await this.getBrands();
   }
 
   async onSave(): Promise<void> {
@@ -164,4 +170,31 @@ export class ProdutosModalComponent implements OnInit {
     return !!( control && control.invalid && (control.touched || control.dirty) );
   }
 
+  async getCategory(): Promise<void> {
+    try {
+      const response = await this.productService.listCategory();
+      if (response.success) {
+        console.log('categories', response);
+        this.categories = response.data;
+      } else {
+        console.error('Failed to fetch categories:', response.message);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  }
+
+  async getBrands(): Promise<void> {
+    try {
+      const response = await this.productService.listBrand();
+      if (response.success) {
+        console.log('brands', response);
+        this.brands = response.data;
+      } else {
+        console.error('Failed to fetch brands:', response.message);
+      }
+    } catch (error) {
+      console.error('Error fetching brands:', error);
+    }
+  }
 }

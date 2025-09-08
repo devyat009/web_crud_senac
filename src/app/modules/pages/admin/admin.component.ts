@@ -18,7 +18,10 @@ export class AdminComponent implements OnInit {
   itensEstoqueBaixo: any[] = [];
   mostrarNotificacoes: boolean = true;
 
+  mostrarCategorias: boolean = false;
   categorias: any[] = [];
+
+  mostrarMarcas: boolean = false;
   marcas: any[] = [];
 
   constructor(
@@ -69,13 +72,29 @@ export class AdminComponent implements OnInit {
     try {
       const response = await this.productService.listCategory();
       this.categorias = response.data || [];
+      console.log('Categorias listadas:', this.categorias);
     } catch (error) {
       this.snackBar.open('Erro ao listar categorias', 'Fechar', { duration: 3000 });
     }
   }
 
-  async excluirCategoria(): Promise<void> {
-    // lógica para excluir categoria
+  async excluirCategoria(item: any): Promise<void> {
+    try {
+      const response = await this.productService.deleteCategory(item.id_category);
+      if (response.success) {
+        this.snackBar.open('Categoria excluída com sucesso!', 'Fechar', { duration: 3000 });
+        this.listarCategorias();
+        this.mostrarCategorias = false;
+        setTimeout(() => {
+          this.mostrarCategorias = true;
+        }, 3000);
+      } else {
+        this.snackBar.open('Erro ao excluir categoria: ' + (response.message || 'Erro desconhecido'), 'Fechar', { duration: 3000 });
+      }
+    } catch (error) {
+      console.error(error);
+      this.snackBar.open('Erro ao excluir categoria', 'Fechar', { duration: 3000 });
+    }
   }
 
   async adicionarMarca(): Promise<void> {
@@ -95,16 +114,96 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  async editarCategoria(item: any): Promise<void> {
+    try {
+      const dialogRef = this.dialog.open(CategoriaModalComponent, {
+        width: '900px',
+        maxWidth: 'none',
+        data: {
+          isEdit: true,
+          categoria: item
+        }
+      });
+      dialogRef.afterClosed().subscribe(async (result) => {
+        if (result) {
+          console.log('Categoria editada:', result);
+          // const response = await this.productService.editCategory(result);
+          //this.listarCategorias();
+          this.mostrarCategorias = false;
+          setTimeout(() => {
+            this.mostrarCategorias = true;
+          }, 3000);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      this.snackBar.open('Erro ao editar categoria', 'Fechar', { duration: 3000 });
+    }
+  }
+
+  toggleListarCategorias() {
+    this.mostrarCategorias = !this.mostrarCategorias;
+    if (this.mostrarCategorias) {
+      this.mostrarNotificacoes = false;
+      this.mostrarMarcas = false;
+      this.listarCategorias();
+    }
+  }
+
+  toggleListarMarcas() {
+    this.mostrarMarcas = !this.mostrarMarcas;
+    if (this.mostrarMarcas) {
+      this.mostrarNotificacoes = false;
+      this.mostrarCategorias = false;
+      this.listarMarcas();
+    }
+  }
+
   async listarMarcas() {
     try {
       const response = await this.productService.listBrand();
       this.marcas = response.data || [];
+      console.log('Marcas listadas:', this.marcas);
     } catch (error) {
       this.snackBar.open('Erro ao listar marcas', 'Fechar', { duration: 3000 });
     }
   }
+  async editarMarca(item: any) {
+    try {
+      const dialogRef = this.dialog.open(MarcaModalComponent, {
+        width: '900px',
+        maxWidth: 'none',
+        data: {
+          isEdit: true,
+          marca: item // Exemplo: passando a primeira marca para edição
+        }
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          console.log('Marca editada:', result);
+          //const response = await this.productService.editBrand(result);
+          //this.listarMarcas();
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      this.snackBar.open('Erro ao editar marca', 'Fechar', { duration: 3000 });
+    }
+  }
 
-  async excluirMarca() {
+  async excluirMarca(item: any) {
+    try {
+      const response = await this.productService.deleteBrand(item.id_brand);
+      if (response.success) {
+        this.snackBar.open('Marca excluída com sucesso!', 'Fechar', { duration: 3000 });
+        //this.listarMarcas();
+      } else {
+        this.snackBar.open('Erro ao excluir marca: ' + (response.message || 'Erro desconhecido'), 'Fechar', { duration: 3000 });
+      }
+    } catch (error) {
+      console.error(error);
+      this.snackBar.open('Erro ao excluir marca', 'Fechar', { duration: 3000 });
+    }
   }
 
   adicionarProduto() {
