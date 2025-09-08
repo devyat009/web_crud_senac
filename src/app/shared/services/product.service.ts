@@ -80,6 +80,13 @@ export class ProductService {
     );
   }
 
+  async editBrand(id: string, obj: any): Promise<any> {
+    const json = JSON.stringify({ nome_marca: obj });
+    return await lastValueFrom(
+      this.http.patch<any>(this.baseUrl + 'api/v1/products/brand/' + id, json, httpOptions)
+    );
+  }
+
   async createCategory(nome_categoria: string): Promise<any> {
     return await lastValueFrom(
       this.http.post<any>(this.baseUrl + 'api/v1/products/category', JSON.stringify({ nome_categoria }), httpOptions)
@@ -94,6 +101,13 @@ export class ProductService {
   async deleteCategory(id: string): Promise<any> {
     return await lastValueFrom(
       this.http.delete<any>(this.baseUrl + 'api/v1/products/category/' + id)
+    );
+  }
+
+  async editCategory(id: string, obj: any): Promise<any> {
+    const json = JSON.stringify({ nome_categoria: obj });
+    return await lastValueFrom(
+      this.http.patch<any>(this.baseUrl + 'api/v1/products/category/' + id, json, httpOptions)
     );
   }
 }

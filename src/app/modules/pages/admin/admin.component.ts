@@ -6,6 +6,8 @@ import { ProductService } from '../../../shared/services/product.service';
 import { FormsModule } from '@angular/forms';
 import { MarcaModalComponent } from './components/marca/marca-modal.componte';
 import { CategoriaModalComponent } from './components/categoria/categoria-modal.componte';
+import { ConfirmModalComponent, ConfirmModalData } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { ProdutosModalComponent } from '../produtos/Components/produtos-modal/produtos-modal.component';
 
 @Component({
   selector: 'app-admin',
@@ -23,6 +25,34 @@ export class AdminComponent implements OnInit {
 
   mostrarMarcas: boolean = false;
   marcas: any[] = [];
+
+  paginaAtualMarcas: number = 1;
+  paginaAtualCategorias: number = 1;
+  itensPorPagina: number = 10;
+
+  get marcasPaginadas(): any[] {
+    const inicio = (this.paginaAtualMarcas - 1) * this.itensPorPagina;
+    return this.marcas.slice(inicio, inicio + this.itensPorPagina);
+  }
+
+  get categoriasPaginadas(): any[] {
+    const inicio = (this.paginaAtualCategorias - 1) * this.itensPorPagina;
+    return this.categorias.slice(inicio, inicio + this.itensPorPagina);
+  }
+
+  get marcasPageCount(): number {
+    return Math.ceil(this.marcas.length / this.itensPorPagina);
+  }
+
+  get categoriasPageCount(): number {
+    return Math.ceil(this.categorias.length / this.itensPorPagina);
+  }
+
+  getPaginasArray(totalPaginas: number): number[] {
+    return Array.from({length: totalPaginas}, (_, i) => i + 1);
+  }
+
+
 
   constructor(
     private productService: ProductService,
@@ -49,6 +79,13 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  mudarPaginaMarcas(novaPagina: number) {
+    this.paginaAtualMarcas = novaPagina;
+  }
+
+  mudarPaginaCategorias(novaPagina: number) {
+    this.paginaAtualCategorias = novaPagina;
+  }
 
 
   async adicionarCategoria() {
@@ -64,7 +101,13 @@ export class AdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Categoria adicionada:', result);
-        //this.listarMarcas();
+        this.listarCategorias();
+        this.mostrarCategorias = false;
+        this.mostrarNotificacoes = false;
+        this.mostrarMarcas = false;
+        setTimeout(() => {
+          this.mostrarCategorias = true;
+        }, 500);
       }
     });
   }
@@ -79,7 +122,18 @@ export class AdminComponent implements OnInit {
   }
 
   async excluirCategoria(item: any): Promise<void> {
-    try {
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      width: '350px',
+      data: {
+        title: 'Excluir Categoria',
+        message: 'Tem certeza que deseja excluir esta categoria?',
+        confirmText: 'Excluir',
+        cancelText: 'Cancelar'
+      } as ConfirmModalData
+    });
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (confirmed) {
+      try {
       const response = await this.productService.deleteCategory(item.id_category);
       if (response.success) {
         this.snackBar.open('Categoria excluída com sucesso!', 'Fechar', { duration: 3000 });
@@ -87,13 +141,14 @@ export class AdminComponent implements OnInit {
         this.mostrarCategorias = false;
         setTimeout(() => {
           this.mostrarCategorias = true;
-        }, 3000);
+        }, 500);
       } else {
         this.snackBar.open('Erro ao excluir categoria: ' + (response.message || 'Erro desconhecido'), 'Fechar', { duration: 3000 });
       }
-    } catch (error) {
-      console.error(error);
-      this.snackBar.open('Erro ao excluir categoria', 'Fechar', { duration: 3000 });
+      } catch (error) {
+        console.error(error);
+        this.snackBar.open('Erro ao excluir categoria', 'Fechar', { duration: 3000 });
+      }
     }
   }
 
@@ -109,7 +164,13 @@ export class AdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Marca adicionada:', result);
-        //this.listarMarcas();
+        this.listarMarcas();
+        this.mostrarMarcas = false;
+        this.mostrarCategorias = false;
+        this.mostrarNotificacoes = false;
+        setTimeout(() => {
+          this.mostrarMarcas = true;
+        }, 500);
       }
     });
   }
@@ -127,12 +188,11 @@ export class AdminComponent implements OnInit {
       dialogRef.afterClosed().subscribe(async (result) => {
         if (result) {
           console.log('Categoria editada:', result);
-          // const response = await this.productService.editCategory(result);
-          //this.listarCategorias();
+          this.listarCategorias();
           this.mostrarCategorias = false;
           setTimeout(() => {
             this.mostrarCategorias = true;
-          }, 3000);
+          }, 500);
         }
       });
     } catch (error) {
@@ -159,6 +219,14 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  toggleNotificacoesEstoqueBaixo() {
+    this.mostrarNotificacoes = !this.mostrarNotificacoes;
+    if (this.mostrarNotificacoes) {
+      this.mostrarCategorias = false;
+      this.mostrarMarcas = false;
+    }
+  }
+
   async listarMarcas() {
     try {
       const response = await this.productService.listBrand();
@@ -182,7 +250,11 @@ export class AdminComponent implements OnInit {
         if (result) {
           console.log('Marca editada:', result);
           //const response = await this.productService.editBrand(result);
-          //this.listarMarcas();
+          this.listarMarcas();
+          this.mostrarMarcas = false;
+          setTimeout(() => {
+            this.mostrarMarcas = true;
+          }, 500);
         }
       });
     } catch (error) {
@@ -192,6 +264,19 @@ export class AdminComponent implements OnInit {
   }
 
   async excluirMarca(item: any) {
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      width: '350px',
+      data: {
+        title: 'Excluir Marca',
+        message: 'Tem certeza que deseja excluir esta marca?',
+        confirmText: 'Excluir',
+        cancelText: 'Cancelar'
+      } as ConfirmModalData
+    });
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (!confirmed) {
+      return;
+    }
     try {
       const response = await this.productService.deleteBrand(item.id_brand);
       if (response.success) {
@@ -215,8 +300,26 @@ export class AdminComponent implements OnInit {
   abrirRelatorio() {
     // lógica para abrir relatórios
   }
-  editarProduto(item: any) {
-    // lógica para editar produto
+  editarProduto(produto: any) {
+    const dialogRef = this.dialog.open(ProdutosModalComponent, {
+      width: '900px',
+      maxWidth: 'none',
+      data: {
+        produto: produto,
+        isEdit: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Produto editado:', result);
+        // Aqui você atualizaria o produto na lista ou faria a chamada para a API
+        const index = this.itensEstoqueBaixo.findIndex(p => p === produto);
+        if (index !== -1) {
+          this.itensEstoqueBaixo[index] = { ...this.itensEstoqueBaixo[index], ...result };
+        }
+      }
+    });
   }
   excluirProduto(item: any) {
     // lógica para excluir produto

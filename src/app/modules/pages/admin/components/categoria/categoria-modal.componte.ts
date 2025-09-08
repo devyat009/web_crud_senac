@@ -7,9 +7,6 @@ import { MatInputModule } from '@angular/material/input';
 import { ProductService } from '../../../../../shared/services/product.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-export interface CategoriaModalData {
-  nome?: string;
-}
 
 @Component({
   selector: 'app-categoria-modal',
@@ -21,36 +18,59 @@ export interface CategoriaModalData {
     ReactiveFormsModule,
     MatDialogModule,
     MatButtonModule,
-    MatInputModule
-  ]
+    MatInputModule,
+  ],
 })
 export class CategoriaModalComponent {
   categoriaForm = new FormGroup({
-    nome: new FormControl('', [Validators.required, Validators.maxLength(50)])
+    nome: new FormControl('', [Validators.required, Validators.maxLength(50)]),
   });
-  private snackBar =  inject(MatSnackBar);
+  isEdit: boolean = false;
+  private snackBar = inject(MatSnackBar);
 
   constructor(
     public dialogRef: MatDialogRef<CategoriaModalComponent>,
     private productService: ProductService,
-    @Inject(MAT_DIALOG_DATA) public data: CategoriaModalData
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    if (data?.nome) {
-      this.categoriaForm.patchValue({ nome: data.nome });
+    if (data?.categoria && data?.categoria.nome_categoria) {
+      this.categoriaForm.patchValue({ nome: data.categoria.nome_categoria });
     }
+    this.isEdit = data.isEdit;
   }
 
   async onSave(): Promise<void> {
     if (this.categoriaForm.valid) {
       try {
-        const categoriaResponse = await this.productService.createCategory(this.categoriaForm.value.nome ?? '');
-        if (categoriaResponse.success) {
-          this.snackBar.open('Categoria criada com sucesso', 'Fechar', { duration: 3000 });
-          console.log('categoriaResponse', categoriaResponse);
+        if (this.isEdit) {
+          const categoriaResponse = await this.productService.editCategory(
+            this.data.categoria.id_category,
+            this.categoriaForm.value.nome ?? ''
+          );
+          if (categoriaResponse.success) {
+            this.snackBar.open('Categoria editada com sucesso', 'Fechar', {
+              duration: 3000,
+            });
+            console.log('categoriaResponse', categoriaResponse);
+          }
+          this.dialogRef.close(categoriaResponse);
+          return;
+        } else {
+          const categoriaResponse = await this.productService.createCategory(
+            this.categoriaForm.value.nome ?? ''
+          );
+          if (categoriaResponse.success) {
+            this.snackBar.open('Categoria criada com sucesso', 'Fechar', {
+              duration: 3000,
+            });
+            console.log('categoriaResponse', categoriaResponse);
+          }
+          this.dialogRef.close(categoriaResponse);
         }
-        this.dialogRef.close(categoriaResponse);
       } catch (error) {
-        this.snackBar.open('Erro ao salvar categoria', 'Fechar', { duration: 3000 });
+        this.snackBar.open('Erro ao salvar categoria', 'Fechar', {
+          duration: 3000,
+        });
         console.error('Erro ao salvar categoria:', error);
       }
       this.categoriaForm.markAllAsTouched();

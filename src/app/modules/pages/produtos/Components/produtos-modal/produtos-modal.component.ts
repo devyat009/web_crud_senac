@@ -58,17 +58,18 @@ export class ProdutosModalComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ProdutosModalComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: ProdutoModalData
+    public data: any
   ) {}
 
   async ngOnInit(): Promise<void> {
     console.log('modal data', this.data);
-    if (this.data.isEdit && this.data.produto) {
-      this.produtoForm.patchValue(this.data.produto);
-    }
 
     await this.getCategory();
     await this.getBrands();
+
+    if (this.data.isEdit && this.data.produto) {
+      this.produtoForm.patchValue(this.data.produto);
+    }
   }
 
   async onSave(): Promise<void> {
@@ -79,8 +80,8 @@ export class ProdutosModalComponent implements OnInit {
         nome_item: formValue.nome_item ?? '',
         modelo: formValue.modelo ?? '',
         codigo_sku: formValue.codigo_sku ?? '',
-        categoria: formValue.categoria ?? '',
-        marca: formValue.marca ?? '',
+        id_categoria: formValue.categoria ?? '',
+        id_marca: formValue.marca ?? '',
         tamanho: formValue.tamanho ?? '',
         cor: formValue.cor ?? '',
         preco: Number(formValue.preco) ?? 0,
@@ -90,6 +91,7 @@ export class ProdutosModalComponent implements OnInit {
         descricao: formValue.descricao ?? '',
         observacoes: formValue.observacoes ?? ''
       };
+      console.warn('produtoData', produtoData);
         // add
         if (!this.data.isEdit)
         {

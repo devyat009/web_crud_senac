@@ -2,8 +2,8 @@ export interface ProductDto {
   codigo_barras: string;
   nome_item: string;
   modelo: string;
-  categoria: string;
-  marca: string;
+  id_categoria: string;
+  id_marca: string;
   preco: number;
   quantidade: number;
   quantidade_minima: number;
