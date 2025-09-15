@@ -27,15 +27,19 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     console.log('AppComponent initialized');
-    const currentUrl = this.router.url;
+    const storedUser = this.storageService.getItem('loggedInUser');
+    this.userLoggedIn = !!storedUser;
+    let initialized = false;
+    let prev = this.userLoggedIn;
     this.storageService.loggedIn$.subscribe(logged => {
+      if (!initialized) { initialized = true; return; }
       this.userLoggedIn = logged;
-      if (!logged && this.router.url !== '/login') {
-        this.router.navigate(['/login']);
-      }
-      if (logged && (this.router.url === '/' || this.router.url === '/login')) {
+      if (!logged) {
+        if (this.router.url !== '/login') this.router.navigate(['/login']);
+      } else if (!prev && logged && this.router.url === '/login') {
         this.router.navigate(['/home']);
       }
+      prev = logged;
     });
   }
 }

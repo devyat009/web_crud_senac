@@ -41,7 +41,7 @@ export class ClientesModalComponent implements OnInit {
     endereco: new FormControl('', [Validators.required]),
     telefone: new FormControl('', [Validators.required]),
     data_nascimento: new FormControl('', [Validators.required]),
-    perfil: new FormControl('', [Validators.required]),
+    perfil: new FormControl({ value: 'user', disabled: true }, Validators.required),
     ativo: new FormControl(true, [Validators.required])
   });
 
