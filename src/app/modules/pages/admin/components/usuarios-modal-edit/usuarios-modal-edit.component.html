@@ -1,0 +1,40 @@
+<div class="mat-dialog-container">
+  <div class="modal-header d-flex justify-content-between align-items-center p-3 bg-main-light text-white">
+    <h4 class="mb-0">Editar Usuário</h4>
+    <button type="button" class="btn-close btn-close-white" (click)="fechar()"></button>
+  </div>
+  <div class="modal-body p-4">
+    <form [formGroup]="form" class="row g-3">
+      <div class="col-md-6">
+        <input type="text" class="form-control" formControlName="nome" placeholder="Nome *"
+        [ngClass]="{ 'border-success': isValid('nome', form), 'border-danger': isInvalid('nome', form) }">
+      </div>
+      <div class="col-md-6">
+        <input type="email" class="form-control" formControlName="email" placeholder="Email *"
+        [ngClass]="{ 'border-success': isValid('email', form), 'border-danger': isInvalid('email', form) }">
+      </div>
+      <div class="col-md-6">
+        <select class="form-control" formControlName="role" [ngClass]="{ 'border-success': isValid('role', form), 'border-danger': isInvalid('role', form) }">
+          <option value="" disabled>Selecione o Perfil *</option>
+          <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" formControlName="telefone" mask="(00) 00000-0000" placeholder="Telefone *"
+        [ngClass]="{ 'border-success': isValid('telefone', form), 'border-danger': isInvalid('telefone', form) }">
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" formControlName="cpf" mask="000.000.000-00"  placeholder="CPF *"
+        [ngClass]="{ 'border-success': isValid('cpf', form), 'border-danger': isInvalid('cpf', form) }">
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" formControlName="is_active" placeholder="Status" [disabled]="true"
+        [ngClass]="{ 'border-success': isValid('is_active', form), 'border-danger': isInvalid('is_active', form) }">
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer p-3 d-flex justify-content-center">
+    <button class="btn btn-teal px-4" (click)="salvar()" [disabled]="form.invalid">Salvar</button>
+  </div>
+</div>

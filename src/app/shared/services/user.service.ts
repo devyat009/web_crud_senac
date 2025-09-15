@@ -29,4 +29,28 @@ export class UserService {
       this.http.post<any>(this.baseUrl + 'api/v1/users/', json, httpOptions)
     );
   }
+
+  getAllUsers(): Promise<any[]> {
+    return lastValueFrom(
+      this.http.get<any[]>(this.baseUrl + 'api/v1/users/', httpOptions)
+    );
+  }
+
+  updateUser(obj: any): Promise<any> {
+    if (!obj.id_user) throw new Error('id_user é obrigatório');
+    const { id_user, ...payload } = obj;
+    return lastValueFrom(
+      this.http.put<any>(
+        this.baseUrl + `api/v1/users/${id_user}`,
+        JSON.stringify(payload),
+        httpOptions
+      )
+    );
+  }
+
+  deleteUser(id_user: number): Promise<any> {
+    return lastValueFrom(
+      this.http.delete<any>(this.baseUrl + `api/v1/users/${id_user}`, httpOptions)
+    );
+  }
 }

@@ -8,6 +8,9 @@ import { MarcaModalComponent } from './components/marca/marca-modal.componte';
 import { CategoriaModalComponent } from './components/categoria/categoria-modal.componte';
 import { ConfirmModalComponent, ConfirmModalData } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { ProdutosModalComponent } from '../produtos/Components/produtos-modal/produtos-modal.component';
+import { UserService } from '../../../shared/services/user.service';
+import { StorageService } from '../../../shared/services/storage.service';
+import { UsuariosModalEditComponent } from './components/usuarios-modal-edit/usuarios-modal-edit.component';
 
 @Component({
   selector: 'app-admin',
@@ -30,6 +33,11 @@ export class AdminComponent implements OnInit {
   paginaAtualCategorias: number = 1;
   itensPorPagina: number = 10;
 
+  mostrarUsuarios: boolean = false;
+  usuarios: any[] = [];
+  paginaAtualUsuarios: number = 1;
+  usuariosPageCount: number = 1;
+
   get marcasPaginadas(): any[] {
     const inicio = (this.paginaAtualMarcas - 1) * this.itensPorPagina;
     return this.marcas.slice(inicio, inicio + this.itensPorPagina);
@@ -48,6 +56,11 @@ export class AdminComponent implements OnInit {
     return Math.ceil(this.categorias.length / this.itensPorPagina);
   }
 
+  get usuariosPaginados(): any[] {
+    const inicio = (this.paginaAtualUsuarios - 1) * this.itensPorPagina;
+    return this.usuarios.slice(inicio, inicio + this.itensPorPagina);
+  }
+
   getPaginasArray(totalPaginas: number): number[] {
     return Array.from({length: totalPaginas}, (_, i) => i + 1);
   }
@@ -56,6 +69,8 @@ export class AdminComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private userService: UserService,
+    private storageService: StorageService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {}
@@ -85,6 +100,10 @@ export class AdminComponent implements OnInit {
 
   mudarPaginaCategorias(novaPagina: number) {
     this.paginaAtualCategorias = novaPagina;
+  }
+
+  mudarPaginaUsuarios(novaPagina: number) {
+    this.paginaAtualUsuarios = novaPagina;
   }
 
 
@@ -227,6 +246,16 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  async toggleListarUsuarios() {
+    this.mostrarUsuarios = !this.mostrarUsuarios;
+    if (this.mostrarUsuarios) {
+      this.mostrarNotificacoes = false;
+      this.mostrarCategorias = false;
+      this.mostrarMarcas = false;
+      await this.listarUsuarios();
+    }
+  }
+
   async listarMarcas() {
     try {
       const response = await this.productService.listBrand();
@@ -323,5 +352,57 @@ export class AdminComponent implements OnInit {
   }
   excluirProduto(item: any) {
     // lógica para excluir produto
+  }
+
+  async editarUsuario(usuario: any) {
+    const dialogRef = this.dialog.open(UsuariosModalEditComponent, {
+      width: '700px',
+      maxWidth: 'none',
+      data: { user: usuario }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) this.listarUsuarios();
+    });
+  }
+  async excluirUsuario(usuario: any) {
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      width: '350px',
+      data: {
+        title: 'Excluir Usuário',
+        message: 'Tem certeza que deseja excluir este usuário?',
+        confirmText: 'Excluir',
+        cancelText: 'Cancelar'
+      } as ConfirmModalData
+    });
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (confirmed) {
+      try {
+        const response = await this.userService.deleteUser(usuario.id_user);
+        if (response.success) {
+          this.snackBar.open('Usuário excluído com sucesso!', 'Fechar', { duration: 3000 });
+          this.listarUsuarios();
+        } else {
+          this.snackBar.open('Erro ao excluir usuário: ' + (response.message || 'Erro desconhecido'), 'Fechar', { duration: 3000 });
+        }
+      } catch (error) {
+        console.error(error);
+        this.snackBar.open('Erro ao excluir usuário', 'Fechar', { duration: 3000 });
+      }
+    }
+  }
+  async listarUsuarios(): Promise<void> {
+    // lógica para listar usuários
+    try {
+      const response = await this.userService.getAllUsers();
+      if (response && Array.isArray(response)) {
+        const loggedUser = JSON.parse(this.storageService.getItem('loggedInUser') || '{}');
+        this.usuarios = response.filter((u: any) => u.email !== loggedUser.email);
+        console.log('Usuários listados:', this.usuarios);
+      } else {
+        this.snackBar.open('Erro ao listar usuários', 'Fechar', { duration: 3000 });
+      }
+    } catch (error) {
+      this.snackBar.open('Erro ao listar usuários', 'Fechar', { duration: 3000 });
+    }
   }
 }
