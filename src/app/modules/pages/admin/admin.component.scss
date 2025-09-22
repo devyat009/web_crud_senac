@@ -6,7 +6,7 @@
   height: 38px;
   border-radius: 8px;
   cursor: pointer;
-  transition: width 0.2s, background 0.2s;
+  transition: width var(--anim-base), background-color var(--anim-base), color var(--anim-base);
   overflow: hidden;
   position: relative;
   font-size: 1.2rem;
@@ -14,7 +14,7 @@
     opacity: 0;
     margin-left: 0.5rem;
     white-space: nowrap;
-    transition: opacity 0.2s;
+    transition: opacity var(--anim-base);
     font-size: 1rem;
     font-weight: 500;
     width: 0;
@@ -29,23 +29,23 @@
   }
 }
 .btn-add {
-  background: #009688;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
 }
 .btn-add:hover {
-  background: #00796b;
+  background: var(--color-primary-600);
 }
 .btn-list {
-  background: #1976d2;
-  color: #fff;
+  background: var(--main-bg-color-light);
+  color: var(--color-text-inverse);
 }
 .btn-list:hover {
-  background: #125ea2;
+  background: var(--main-bg-color);
 }
 .btn-delete {
-  background: #e53935;
-  color: #fff;
+  background: var(--color-danger);
+  color: var(--color-text-inverse);
 }
 .btn-delete:hover {
-  background: #b71c1c;
+  background: var(--color-danger-700);
 }

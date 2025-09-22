@@ -1,0 +1,28 @@
+:host {
+	display: block;
+}
+
+.modal-header {
+	border-bottom: 1px solid rgba(0,0,0,0.08);
+	background: var(--main-bg-color-light);
+	color: var(--color-text-inverse);
+}
+
+.modal-footer {
+	border-top: 1px solid rgba(0,0,0,0.08);
+	background: #fafafa;
+}
+
+.confirm-title {
+	font-weight: 600;
+}
+
+.confirm-actions .btn {
+	transition: background-color var(--anim-base), color var(--anim-base), transform var(--anim-fast);
+}
+.confirm-actions .btn:hover { transform: translateY(-1px); }
+
+.btn-confirm { background: var(--color-danger); color: var(--color-text-inverse); }
+.btn-confirm:hover { background: var(--color-danger-700); }
+.btn-cancel { background: var(--main-bg-color-light); color: var(--color-text-inverse); }
+.btn-cancel:hover { background: var(--main-bg-color); }
