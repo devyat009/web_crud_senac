@@ -38,7 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let cliente of clientesFiltrados">
+            <tr *ngFor="let cliente of clientesPaginados">
               <td>{{ cliente.nome }}</td>
               <td>{{ cliente.cpf | mask:'000.000.000-00' }}</td>
               <td>{{ cliente.email }}</td>
@@ -55,6 +55,23 @@
             </tr>
           </tbody>
         </table>
+        <!-- Paginação -->
+        <nav *ngIf="clientesFiltrados.length > itensPorPagina" class="mt-3">
+          <ul class="pagination justify-content-center">
+            <li class="page-item" [class.disabled]="paginaAtualClientes === 1">
+              <button class="page-link" (click)="mudarPaginaClientes(paginaAtualClientes - 1)"
+                [disabled]="paginaAtualClientes === 1">Anterior</button>
+            </li>
+            <li class="page-item" *ngFor="let p of getPaginasArray(clientesPageCount); let i = index"
+              [class.active]="paginaAtualClientes === i + 1">
+              <button class="page-link" (click)="mudarPaginaClientes(i + 1)">{{ i + 1 }}</button>
+            </li>
+            <li class="page-item" [class.disabled]="paginaAtualClientes === clientesPageCount">
+              <button class="page-link" (click)="mudarPaginaClientes(paginaAtualClientes + 1)"
+                [disabled]="paginaAtualClientes === clientesPageCount">Próxima</button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>

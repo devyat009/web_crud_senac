@@ -68,6 +68,8 @@ export class NavBarComponent implements OnInit {
       this.activeTab = 'menu';
     } else if (url.includes('/home')) {
       this.activeTab = 'home';
+    } else if (url.includes('/admin')) {
+      this.activeTab = 'admin';
     } else {
       this.activeTab = '';
     }

@@ -26,6 +26,26 @@ export class ClientesComponent implements OnInit {
   clientes: ClienteDto[] = [];
   filtroPesquisa: string = '';
   clientesFiltrados: ClienteDto[] = [];
+  // Paginação
+  paginaAtualClientes: number = 1;
+  itensPorPagina: number = 10;
+
+  get clientesPaginados(): ClienteDto[] {
+    const inicio = (this.paginaAtualClientes - 1) * this.itensPorPagina;
+    return this.clientesFiltrados.slice(inicio, inicio + this.itensPorPagina);
+  }
+
+  get clientesPageCount(): number {
+    return Math.ceil(this.clientesFiltrados.length / this.itensPorPagina);
+  }
+
+  getPaginasArray(totalPaginas: number): number[] {
+    return Array.from({length: totalPaginas}, (_, i) => i + 1);
+  }
+
+  mudarPaginaClientes(novaPagina: number) {
+    this.paginaAtualClientes = novaPagina;
+  }
 
   constructor(
     private dialog: MatDialog,
@@ -100,6 +120,7 @@ export class ClientesComponent implements OnInit {
 
     if (!this.filtroPesquisa || this.filtroPesquisa.trim() === '') {
       this.clientesFiltrados = [...this.clientes];
+      this.paginaAtualClientes = 1;
       return;
     }
 
@@ -117,5 +138,7 @@ export class ClientesComponent implements OnInit {
 
       return matchNome || matchEmail || matchCpf;
     });
+    // Resetar para primeira página ao aplicar filtro
+    this.paginaAtualClientes = 1;
   }
 }

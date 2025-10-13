@@ -68,7 +68,10 @@ export class ProdutosModalComponent implements OnInit {
     await this.getBrands();
 
     if (this.data.isEdit && this.data.produto) {
-      this.produtoForm.patchValue(this.data.produto);
+      const patch = { ...this.data.produto };
+      if (patch.id_marca) patch.marca = patch.id_marca;
+      if (patch.id_categoria) patch.categoria = patch.id_categoria;
+      this.produtoForm.patchValue(patch);
     }
   }
 
