@@ -48,7 +48,15 @@ export class AuthService {
 
   public Logout() {
     this.storageService.removeItem('loggedInUser');
+    this.storageService.removeItem('login@token');
     this.router.navigate(['/']);
+  }
+
+  async LoginWithGoogle(idToken: string): Promise<any> {
+    const json = JSON.stringify({ token: idToken });
+    return await lastValueFrom(
+      this.http.post<any>(this.baseUrl + 'api/v1/auth/google', json, httpOptions)
+    );
   }
 
   async ChangePassword(obj: any): Promise<any> {

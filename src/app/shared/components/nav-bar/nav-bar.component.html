@@ -26,6 +26,11 @@
 
     <!-- Right section with logout -->
     <div class="d-flex align-items-center">
+      <!-- Complete profile icon -->
+      <button class="btn btn-nav btn-sm position-relative me-2" (click)="goProfile()" title="Completar cadastro">
+        <i class="bi bi-person-circle fs-4" [class.text-warning]="profileIncomplete"></i>
+        <span *ngIf="profileIncomplete" class="position-absolute top-0 start-100 translate-middle p-1 bg-warning border border-light rounded-circle"></span>
+      </button>
       <button class="btn btn-nav btn-sm" (click)="logout()" title="Sair">
         <i class="bi bi-box-arrow-right fs-4"></i>
       </button>

@@ -36,6 +36,12 @@ export class UserService {
     );
   }
 
+  getUserById(id_user: number): Promise<any> {
+    return lastValueFrom(
+      this.http.get<any>(this.baseUrl + `api/v1/users/${id_user}`, httpOptions)
+    );
+  }
+
   updateUser(obj: any): Promise<any> {
     if (!obj.id_user) throw new Error('id_user é obrigatório');
     const { id_user, ...payload } = obj;

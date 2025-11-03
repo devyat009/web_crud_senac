@@ -3,6 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import { filter } from "rxjs";
+import { UserService } from "../../services/user.service";
 
 @Component ({
   selector: 'app-nav-bar',
@@ -16,10 +17,12 @@ import { filter } from "rxjs";
 export class NavBarComponent implements OnInit {
   activeTab: string = 'users';
   user: any;
+  profileIncomplete = false;
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {
     // Initialization logic can go here
   }
@@ -36,6 +39,17 @@ export class NavBarComponent implements OnInit {
       .subscribe((event: any) => {
         this.setActiveTabByUrl(event.urlAfterRedirects || event.url);
       });
+
+    // Fetch completeness state (best-effort)
+    if (this.user?.user_id) {
+      this.userService.getUserById(this.user.user_id)
+        .then(u => {
+          this.profileIncomplete = this.isProfileIncomplete(u);
+        })
+        .catch(() => {
+          this.profileIncomplete = false;
+        });
+    }
   }
 
   setActiveTab(tab: string): void {
@@ -78,6 +92,19 @@ export class NavBarComponent implements OnInit {
   logout(): void {
     this.authService.Logout();
     console.log('Usuário deslogado, redirecionando para a página inicial');
+  }
+
+  goProfile(): void {
+    this.router.navigate(['/perfil']);
+  }
+
+  private isProfileIncomplete(u: any): boolean {
+    if (!u) return true;
+    const telefoneOk = typeof u.telefone === 'string' && /^\d{10,11}$/.test(u.telefone);
+    const nascimentoOk = !!u.data_nascimento;
+    // CPF opcional, mas se existir, validar tamanho
+    const cpfOk = !u.cpf || (typeof u.cpf === 'string' && /^\d{11}$/.test(u.cpf));
+    return !(telefoneOk && nascimentoOk && cpfOk);
   }
 
 }
