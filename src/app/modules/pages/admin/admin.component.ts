@@ -21,13 +21,28 @@ import { UsuariosModalEditComponent } from './components/usuarios-modal-edit/usu
 })
 export class AdminComponent implements OnInit {
   itensEstoqueBaixo: any[] = [];
+  paginaAtualNotificacoes: number = 1;
+  get notificacoesPaginadas(): any[] {
+    const inicio = (this.paginaAtualNotificacoes - 1) * this.itensPorPagina;
+    return this.itensEstoqueBaixo.slice(inicio, inicio + this.itensPorPagina);
+  }
+  get notificacoesPageCount(): number {
+    return Math.ceil(this.itensEstoqueBaixo.length / this.itensPorPagina);
+  }
+  mudarPaginaNotificacoes(novaPagina: number) {
+    this.paginaAtualNotificacoes = novaPagina;
+    // Garante que o painel de notificações permanece visível
+    this.mostrarNotificacoes = true;
+  }
   mostrarNotificacoes: boolean = true;
 
   mostrarCategorias: boolean = false;
   categorias: any[] = [];
+  categoriaFiltro: string = '';
 
   mostrarMarcas: boolean = false;
   marcas: any[] = [];
+  marcaFiltro: string = '';
 
   paginaAtualMarcas: number = 1;
   paginaAtualCategorias: number = 1;
@@ -35,17 +50,26 @@ export class AdminComponent implements OnInit {
 
   mostrarUsuarios: boolean = false;
   usuarios: any[] = [];
+  usuarioFiltro: string = '';
   paginaAtualUsuarios: number = 1;
   usuariosPageCount: number = 1;
 
+  get marcasFiltradas(): any[] {
+    if (!this.marcaFiltro.trim()) return this.marcas;
+    return this.marcas.filter(m => m.nome_marca?.toLowerCase().includes(this.marcaFiltro.trim().toLowerCase()));
+  }
   get marcasPaginadas(): any[] {
     const inicio = (this.paginaAtualMarcas - 1) * this.itensPorPagina;
-    return this.marcas.slice(inicio, inicio + this.itensPorPagina);
+    return this.marcasFiltradas.slice(inicio, inicio + this.itensPorPagina);
   }
 
+  get categoriasFiltradas(): any[] {
+    if (!this.categoriaFiltro.trim()) return this.categorias;
+    return this.categorias.filter(c => c.nome_categoria?.toLowerCase().includes(this.categoriaFiltro.trim().toLowerCase()));
+  }
   get categoriasPaginadas(): any[] {
     const inicio = (this.paginaAtualCategorias - 1) * this.itensPorPagina;
-    return this.categorias.slice(inicio, inicio + this.itensPorPagina);
+    return this.categoriasFiltradas.slice(inicio, inicio + this.itensPorPagina);
   }
 
   get marcasPageCount(): number {
@@ -56,9 +80,18 @@ export class AdminComponent implements OnInit {
     return Math.ceil(this.categorias.length / this.itensPorPagina);
   }
 
+  get usuariosFiltrados(): any[] {
+    if (!this.usuarioFiltro.trim()) return this.usuarios;
+    const filtro = this.usuarioFiltro.trim().toLowerCase();
+    return this.usuarios.filter(u =>
+      (u.nome?.toLowerCase().includes(filtro)) ||
+      (u.email?.toLowerCase().includes(filtro)) ||
+      (u.role?.toLowerCase().includes(filtro))
+    );
+  }
   get usuariosPaginados(): any[] {
     const inicio = (this.paginaAtualUsuarios - 1) * this.itensPorPagina;
-    return this.usuarios.slice(inicio, inicio + this.itensPorPagina);
+    return this.usuariosFiltrados.slice(inicio, inicio + this.itensPorPagina);
   }
 
   getPaginasArray(totalPaginas: number): number[] {
@@ -134,7 +167,7 @@ export class AdminComponent implements OnInit {
     try {
       const response = await this.productService.listCategory();
       this.categorias = response.data || [];
-      console.log('Categorias listadas:', this.categorias);
+      // console.log('Categorias listadas:', this.categorias);
     } catch (error) {
       this.snackBar.open('Erro ao listar categorias', 'Fechar', { duration: 3000 });
     }
@@ -225,6 +258,7 @@ export class AdminComponent implements OnInit {
     if (this.mostrarCategorias) {
       this.mostrarNotificacoes = false;
       this.mostrarMarcas = false;
+      this.mostrarUsuarios = false;
       this.listarCategorias();
     }
   }
@@ -234,6 +268,7 @@ export class AdminComponent implements OnInit {
     if (this.mostrarMarcas) {
       this.mostrarNotificacoes = false;
       this.mostrarCategorias = false;
+      this.mostrarUsuarios = false;
       this.listarMarcas();
     }
   }
@@ -243,6 +278,7 @@ export class AdminComponent implements OnInit {
     if (this.mostrarNotificacoes) {
       this.mostrarCategorias = false;
       this.mostrarMarcas = false;
+      this.mostrarUsuarios = false;
     }
   }
 

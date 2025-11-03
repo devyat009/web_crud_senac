@@ -1,26 +1,30 @@
 .modal-header {
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  background: var(--main-bg-color-light);
+  color: var(--color-text-inverse);
 }
 
 .modal-footer {
-  border-top: 1px solid #dee2e6;
+  border-top: 1px solid rgba(0,0,0,0.08);
 }
 
 .input-group-text {
   background-color: #f8f9fa;
-  border-color: #ced4da;
-  color: #6c757d;
+  border-color: #e0e0e0;
+  color: #546e7a;
 }
 
 .form-control:focus, .form-select:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  border-color: var(--focus-color);
+  box-shadow: 0 0 0 0.2rem rgba(38, 198, 218, 0.25);
 }
 
 ::ng-deep .mat-dialog-container {
-  border-radius: 0 !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-lg) !important;
 }
 
 .mat-dialog-container {
-  border-radius: 0 !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-lg) !important;
 }

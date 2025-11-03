@@ -3,6 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import { filter } from "rxjs";
+import { UserService } from "../../services/user.service";
 
 @Component ({
   selector: 'app-nav-bar',
@@ -16,10 +17,12 @@ import { filter } from "rxjs";
 export class NavBarComponent implements OnInit {
   activeTab: string = 'users';
   user: any;
+  profileIncomplete = false;
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {
     // Initialization logic can go here
   }
@@ -36,6 +39,17 @@ export class NavBarComponent implements OnInit {
       .subscribe((event: any) => {
         this.setActiveTabByUrl(event.urlAfterRedirects || event.url);
       });
+
+    // Fetch completeness state (best-effort)
+    if (this.user?.user_id) {
+      this.userService.getUserById(this.user.user_id)
+        .then(u => {
+          this.profileIncomplete = this.isProfileIncomplete(u);
+        })
+        .catch(() => {
+          this.profileIncomplete = false;
+        });
+    }
   }
 
   setActiveTab(tab: string): void {
@@ -68,6 +82,8 @@ export class NavBarComponent implements OnInit {
       this.activeTab = 'menu';
     } else if (url.includes('/home')) {
       this.activeTab = 'home';
+    } else if (url.includes('/admin')) {
+      this.activeTab = 'admin';
     } else {
       this.activeTab = '';
     }
@@ -76,6 +92,22 @@ export class NavBarComponent implements OnInit {
   logout(): void {
     this.authService.Logout();
     console.log('Usuário deslogado, redirecionando para a página inicial');
+  }
+
+  goProfile(): void {
+    this.router.navigate(['/perfil']);
+  }
+
+  private isProfileIncomplete(u: any): boolean {
+    if (!u) return true;
+    const tel = (u.telefone ?? '').toString();
+    const telefoneOk = /^\d{10,11}$/.test(tel) && tel !== '00000000000';
+    const nasc = (u.data_nascimento ?? '').toString().slice(0, 10);
+    const nascimentoOk = !!nasc && nasc !== '1970-01-01';
+    const cpf = u.cpf ?? '';
+    const cpfOk = !cpf || /^\d{11}$/.test(cpf);
+    const nomeOk = typeof u.nome === 'string' && u.nome.trim().length >= 3;
+    return !(telefoneOk && nascimentoOk && cpfOk && nomeOk);
   }
 
 }

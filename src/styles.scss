@@ -6,14 +6,45 @@
 
 
 :root {
-  --p-button-hover-text-color: #fff;
-  --p-button-border-radius: 8px;
+  /* Theme - Core */
   --main-bg-color: #263238;
   --main-bg-color-light: #37474f;
   --main-bg-color-dark: #1c313a;
   --main-bg-color-teal: #006064;
   --main-bg-color-teal-light: #00838f;
   --main-bg-color-teal-dark: #004d40;
+
+  /* Semantic aliases */
+  --color-bg: var(--main-bg-color);
+  --color-surface: #ffffff;
+  --color-muted: #b0bec5;
+  --color-text: #263238;
+  --color-text-inverse: #ffffff;
+  --color-primary: var(--main-bg-color-teal-light);
+  --color-primary-600: var(--main-bg-color-teal);
+  --color-primary-700: var(--main-bg-color-teal-dark);
+  --color-danger: #e53935;
+  --color-danger-700: #b71c1c;
+  --color-success: #28a745;
+  --color-info: #26c6da;
+  --focus-color: #26c6da;
+
+  /* Radii & Shadows */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.16);
+
+  /* Motion */
+  --anim-fast: 180ms;
+  --anim-base: 240ms;
+  --anim-slow: 360ms;
+
+  /* PrimeNG (if used) */
+  --p-button-hover-text-color: #fff;
+  --p-button-border-radius: 8px;
 }
 
 
@@ -36,17 +67,26 @@
   background-color: var(--main-bg-color-teal-dark);
 }
 
+/* Semantic helpers */
+.bg-surface { background-color: var(--color-surface) !important; }
+.text-primary { color: var(--color-primary) !important; }
+.text-inverse { color: var(--color-text-inverse) !important; }
+.border-primary { border-color: var(--color-primary) !important; }
+
 
 .btn-teal {
-  background-color: var(--main-bg-color-teal);
-  border-color: var(--main-bg-color-teal);
-  color: #fff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  transition: background-color var(--anim-base) ease, border-color var(--anim-base) ease, transform var(--anim-fast) ease;
 }
 .btn-teal:hover {
-  background-color: var(--main-bg-color-teal-dark);
-  border-color: var(--main-bg-color-teal-dark);
-  color: #fff;
+  background-color: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+  color: var(--color-text-inverse);
+  transform: translateY(-1px);
 }
+.btn-teal:active { transform: translateY(0); }
 
 .p-button .p-button-outlined {
   --p-button-bg: transparent;
@@ -61,7 +101,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .input-group input.ng-valid.ng-touched,
 .input-group input.ng-valid.ng-dirty {
-  border-color: #28a745 !important;
+  border-color: var(--color-success) !important;
   box-shadow: none;
 }
 
@@ -76,31 +116,53 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
 .input-group input:focus {
-  border-color: #86b7fe ;
+  border-color: var(--focus-color);
   box-shadow: none !important;
   outline: none !important;
 }
 
 .input-group input:focus + .input-group-text,
 .input-group input:focus ~ .input-group-text {
-  border-color: #86b7fe;
+  border-color: var(--focus-color);
   box-shadow: none !important;
 }
 
-.input-group input:focus {
-  border-color: #86b7fe ;
-}
 .input-group .input-group-text {
   transition: border-color 0.2s;
 }
 .input-group:focus-within .input-group-text {
-  border-color: #86b7fe ;
+  border-color: var(--focus-color);
 }
 
 .input-group .form-control.border-danger,
 .input-group .form-control.border-danger:focus,
 .input-group .input-group-text.border-danger,
 .input-group .input-group-text.border-danger:focus {
-  border-color: #dc3545 !important;
+  border-color: var(--color-danger) !important;
   box-shadow: none !important;
 }
+
+/* Material dialog & overlay - consistent look + animations */
+.cdk-overlay-backdrop {
+  background: rgba(38, 50, 56, 0.35);
+}
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+  animation: fade-in var(--anim-base) ease both;
+}
+
+.mat-dialog-container,
+.mat-mdc-dialog-container .mdc-dialog__container {
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-lg) !important;
+  animation: scale-in var(--anim-base) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Animation utilities */
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slide-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scale-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+
+.animate-fade-in { animation: fade-in var(--anim-base) ease both; }
+.animate-slide-up { animation: slide-up var(--anim-base) ease both; }
+.animate-scale-in { animation: scale-in var(--anim-base) ease both; }
+.transition-base { transition: all var(--anim-base) ease; }

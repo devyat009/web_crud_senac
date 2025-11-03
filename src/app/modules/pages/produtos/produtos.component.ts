@@ -21,17 +21,33 @@ export class ProdutosComponent implements OnInit {
 
   produtos: any[] = [];
   produtosFiltrados: any[] = [];
-  categorias: string[] = [
-    'Eletrônicos',
-    'Roupas',
-    'Casa'
-  ];
-  marcas: string[] = [];
+  categorias: any[] = [];
+  marcas: any[] = [];
   filtroCategoria: string = '';
   filtroMarca: string = '';
   filtroSearch: string = '';
   filtroPrecoMin: number | null = null;
   filtroPrecoMax: number | null = null;
+  // Paginação
+  paginaAtualProdutos: number = 1;
+  itensPorPagina: number = 10;
+
+  get produtosPaginados(): any[] {
+    const inicio = (this.paginaAtualProdutos - 1) * this.itensPorPagina;
+    return this.produtosFiltrados.slice(inicio, inicio + this.itensPorPagina);
+  }
+
+  get produtosPageCount(): number {
+    return Math.ceil(this.produtosFiltrados.length / this.itensPorPagina);
+  }
+
+  getPaginasArray(totalPaginas: number): number[] {
+    return Array.from({length: totalPaginas}, (_, i) => i + 1);
+  }
+
+  mudarPaginaProdutos(novaPagina: number) {
+    this.paginaAtualProdutos = novaPagina;
+  }
 
   constructor(
     private dialog: MatDialog,
@@ -40,6 +56,10 @@ export class ProdutosComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    await Promise.all([
+      this.carregarCategorias(),
+      this.carregarMarcas()
+    ]);
     await this.listarProdutos();
   }
 
@@ -56,6 +76,24 @@ export class ProdutosComponent implements OnInit {
       this.snackBar.open('Erro ao listar produtos: ' + errorMessage, 'Fechar', {
         duration: 4200,
       });
+    }
+  }
+
+  async carregarCategorias() {
+    try {
+      const response = await this.productService.listCategory();
+      this.categorias = response.data || [];
+    } catch (error) {
+      this.snackBar.open('Erro ao carregar categorias', 'Fechar', { duration: 3000 });
+    }
+  }
+
+  async carregarMarcas() {
+    try {
+      const response = await this.productService.listBrand();
+      this.marcas = response.data || [];
+    } catch (error) {
+      this.snackBar.open('Erro ao carregar marcas', 'Fechar', { duration: 3000 });
     }
   }
 
@@ -167,18 +205,20 @@ export class ProdutosComponent implements OnInit {
 
       // Filtro por preço mínimo
       let matchPrecoMin = true;
-      if (this.filtroPrecoMin !== null && this.filtroPrecoMin > 0) {
-        matchPrecoMin = produto.preco >= this.filtroPrecoMin;
+      if (this.filtroPrecoMin !== null && this.filtroPrecoMin !== undefined && String(this.filtroPrecoMin).trim() !== '' && !isNaN(Number(this.filtroPrecoMin))) {
+        matchPrecoMin = produto.preco >= Number(this.filtroPrecoMin);
       }
 
       // Filtro por preço máximo
       let matchPrecoMax = true;
-      if (this.filtroPrecoMax !== null && this.filtroPrecoMax > 0) {
-        matchPrecoMax = produto.preco <= this.filtroPrecoMax;
+      if (this.filtroPrecoMax !== null && this.filtroPrecoMax !== undefined && String(this.filtroPrecoMax).trim() !== '' && !isNaN(Number(this.filtroPrecoMax))) {
+        matchPrecoMax = produto.preco <= Number(this.filtroPrecoMax);
       }
 
       return matchTexto && matchCategoria && matchMarca && matchPrecoMin && matchPrecoMax;
     });
+    // Resetar para primeira página ao aplicar filtro
+    this.paginaAtualProdutos = 1;
 
     console.log('Produtos filtrados:', this.produtosFiltrados.length);
   }

@@ -1,4 +1,4 @@
-<div class="container-fluid min-vh-100" style="background: #263238;">
+<div class="container-fluid min-vh-100 bg-main animate-fade-in">
   <div class="container-fluid px-4 py-4">
     <div class="row">
       <!-- Ações rápidas -->
@@ -100,7 +100,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of itensEstoqueBaixo">
+                <tr *ngFor="let item of notificacoesPaginadas">
                   <td>{{ item.nome_item }}</td>
                   <td>{{ item.categoria }}</td>
                   <td>{{ item.quantidade }}</td>
@@ -116,6 +116,21 @@
                 </tr>
               </tbody>
             </table>
+            <!-- Paginação -->
+            <nav *ngIf="itensEstoqueBaixo.length > itensPorPagina" class="mt-3">
+              <ul class="pagination justify-content-center">
+                <li class="page-item" [class.disabled]="paginaAtualNotificacoes === 1">
+                  <button class="page-link" (click)="mudarPaginaNotificacoes(paginaAtualNotificacoes - 1)" [disabled]="paginaAtualNotificacoes === 1">Anterior</button>
+                </li>
+                <li class="page-item" *ngFor="let p of getPaginasArray(notificacoesPageCount); let i = index"
+                    [class.active]="paginaAtualNotificacoes === i + 1">
+                  <button class="page-link" (click)="mudarPaginaNotificacoes(i + 1)">{{ i + 1 }}</button>
+                </li>
+                <li class="page-item" [class.disabled]="paginaAtualNotificacoes === notificacoesPageCount">
+                  <button class="page-link" (click)="mudarPaginaNotificacoes(paginaAtualNotificacoes + 1)" [disabled]="paginaAtualNotificacoes === notificacoesPageCount">Próxima</button>
+                </li>
+              </ul>
+            </nav>
             <div class="alert alert-warning mt-3">
               Atenção: Os itens acima estão com estoque igual ou abaixo do mínimo cadastrado.
             </div>
@@ -127,10 +142,15 @@
       <!-- Listar marcas -->
       <div class="col-md-9" *ngIf="mostrarMarcas">
         <div class="bg-white rounded-4 shadow-sm p-4">
-          <h4 class="mb-3 text-dark-teal fw-bold">
-            <i class="bi bi-bookmark-fill text-primary me-2"></i>
-            Lista de Marcas
-          </h4>
+          <div class="d-flex align-items-center mb-3 gap-3">
+            <h4 class="text-dark-teal fw-bold mb-0">
+              <i class="bi bi-bookmark-fill text-primary me-2"></i>
+              Lista de Marcas
+            </h4>
+            <div *ngIf="marcas.length > 0" class="ms-auto" style="max-width:220px;">
+              <input type="text" class="form-control" placeholder="Pesquisar marca..." [(ngModel)]="marcaFiltro">
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead class="table-primary">
@@ -175,10 +195,15 @@
       <!-- Listar categorias -->
       <div class="col-md-9" *ngIf="mostrarCategorias">
         <div class="bg-white rounded-4 shadow-sm p-4">
-          <h4 class="mb-3 text-dark-teal fw-bold">
-            <i class="bi bi-bookmark-fill text-primary me-2"></i>
-            Lista de Categorias
-          </h4>
+          <div class="d-flex align-items-center mb-3 gap-3">
+            <h4 class="text-dark-teal fw-bold mb-0">
+              <i class="bi bi-bookmark-fill text-primary me-2"></i>
+              Lista de Categorias
+            </h4>
+            <div *ngIf="categorias.length > 0" class="ms-auto" style="max-width:220px;">
+              <input type="text" class="form-control" placeholder="Pesquisar categoria..." [(ngModel)]="categoriaFiltro">
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead class="table-primary">
@@ -223,10 +248,15 @@
       <!-- Listar usuarios -->
       <div class="col-md-9" *ngIf="mostrarUsuarios">
         <div class="bg-white rounded-4 shadow-sm p-4">
-          <h4 class="mb-3 text-dark-teal fw-bold">
-            <i class="bi bi-people-fill text-primary me-2"></i>
-            Lista de Usuários
-          </h4>
+          <div class="d-flex align-items-center mb-3 gap-3">
+            <h4 class="text-dark-teal fw-bold mb-0">
+              <i class="bi bi-people-fill text-primary me-2"></i>
+              Lista de Usuários
+            </h4>
+            <div *ngIf="usuarios.length > 0" class="ms-auto" style="max-width:220px;">
+              <input type="text" class="form-control" placeholder="Pesquisar usuário..." [(ngModel)]="usuarioFiltro">
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead class="table-primary">

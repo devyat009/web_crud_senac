@@ -1,16 +1,18 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, AfterViewInit, ViewChild, PLATFORM_ID } from '@angular/core';
 import { FormGroup, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../../../shared/services/auth.service';
 import { CreateAccountRequestDto, LoginRequestDto, ForgotPasswordRequestDto, ChangePasswordRequestDto } from './types/login.types';
 import { UserService } from '../../../shared/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { StorageService } from '../../../shared/services/storage.service';
 import { Router } from '@angular/router';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { NgxMaskDirective } from 'ngx-mask';
+import { GoogleAuthService } from '../../../shared/services/google-auth.service';
+import { environment } from '../../../enviroments/enviroment';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +27,10 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
     NgxMaskDirective
   ],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('googleButtonContainer')
+  googleButtonContainer?: ElementRef<HTMLDivElement>;
 
   loginForm = new FormGroup({
     email: new FormControl<string>('', [Validators.required, Validators.email]),
@@ -62,13 +67,20 @@ export class LoginComponent {
     confirm_password: new FormControl<string>('', [Validators.required, Validators.minLength(6)]),
   });
 
+  private readonly isBrowser: boolean;
+  private googleReady = false;
+  googleLoginInProgress = false;
+
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private snackBar: MatSnackBar,
     private readonly storageService: StorageService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly googleAuthService: GoogleAuthService,
+    @Inject(PLATFORM_ID) private readonly platformId: Object
   ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
     this.toggleCreate$.subscribe(value => {
       if (!value) {
         this.createAccountForm.reset();
@@ -95,8 +107,22 @@ export class LoginComponent {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit(): Promise<void> {
+    if (!this.isBrowser) {
+      return;
+    }
 
+    await this.setupGoogleSso();
+  }
+
+  async ngAfterViewInit(): Promise<void> {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    if (this.googleButtonContainer?.nativeElement && this.googleReady) {
+      this.googleAuthService.renderButton(this.googleButtonContainer.nativeElement);
+    }
   }
 
   async onCreateAccount() {
@@ -167,14 +193,7 @@ export class LoginComponent {
             duration: 3000,
           });
           console.log('Login successful:', response);
-          this.storageService.setItem('loggedInUser', JSON.stringify({
-            email: response.email,
-            user_id: response.user_id,
-            nome: response.nome,
-            role: response.role
-          }));
-          this.storageService.loggedInSubject.next(true);
-          this.router.navigate(['/home']);
+          this.finalizeLogin(response);
         }
       } catch (error: any) {
         console.error('Account creation failed:', error);
@@ -190,7 +209,7 @@ export class LoginComponent {
     }
   }
 
-async onForgotPassword() {
+  async onForgotPassword() {
   if (this.forgotPasswordForm.valid) {
     try {
       const forgotData: ForgotPasswordRequestDto = {
@@ -297,6 +316,104 @@ async onForgotPassword() {
 
   setToggleForgot(value: boolean) {
     this.toggleForgot$.next(value);
+  }
+
+  private async setupGoogleSso(): Promise<void> {
+    if (this.googleReady) {
+      return;
+    }
+
+    try {
+      await this.googleAuthService.initialize(environment.googleClientId, (credential: string) => {
+        this.handleGoogleCredential(credential);
+      });
+      this.googleReady = true;
+      if (this.googleButtonContainer?.nativeElement) {
+        this.googleAuthService.renderButton(this.googleButtonContainer.nativeElement);
+      }
+      this.googleAuthService.prompt();
+    } catch (error) {
+      console.error('Erro ao inicializar Google SSO:', error);
+      this.snackBar.open('Não foi possível carregar o login com Google.', 'Fechar', { duration: 3000 });
+    }
+  }
+
+  private async handleGoogleCredential(credential: string): Promise<void> {
+    if (!credential || this.googleLoginInProgress) {
+      return;
+    }
+
+    this.googleLoginInProgress = true;
+    try {
+      const response = await this.authService.LoginWithGoogle(credential);
+      if (response.success) {
+        this.snackBar.open('Login com Google realizado!', 'Fechar', { duration: 3000 });
+        this.finalizeLogin(response);
+      } else {
+        const message = response?.detail?.message || 'Erro desconhecido';
+        this.snackBar.open('Erro ao autenticar com Google: ' + message, 'Fechar', { duration: 4200 });
+      }
+    } catch (error: any) {
+      console.error('Erro ao autenticar com Google:', error);
+      const errorMessage = error?.error?.detail?.message || error?.message || 'Erro desconhecido';
+      this.snackBar.open('Erro ao autenticar com Google: ' + errorMessage, 'Fechar', { duration: 4200 });
+    } finally {
+      this.googleLoginInProgress = false;
+    }
+  }
+
+  private finalizeLogin(response: any): void {
+    this.storageService.setItem('loggedInUser', JSON.stringify({
+      email: response.email,
+      user_id: response.user_id,
+      nome: response.nome,
+      role: response.role
+    }));
+
+    if (response.token) {
+      this.storageService.setItem('login@token', response.token);
+    }
+
+    this.storageService.loggedInSubject.next(true);
+    this.redirectAfterLogin();
+  }
+
+  private async redirectAfterLogin(): Promise<void> {
+    try {
+      const cached = this.storageService.getItem('loggedInUser');
+      const current = cached ? JSON.parse(cached) : null;
+      const id = current?.user_id;
+      if (!id) {
+        this.router.navigate(['/login']);
+        return;
+      }
+      const user = await this.userService.getUserById(id);
+      const incomplete = this.isProfileIncomplete(user);
+      if (incomplete) {
+        this.router.navigate(['/perfil']);
+      } else {
+        this.router.navigate(['/home']);
+      }
+    } catch {
+      // fallback: pedir perfil
+      this.router.navigate(['/perfil']);
+    }
+  }
+
+  private isProfileIncomplete(u: any): boolean {
+    if (!u) return true;
+    const tel = (u.telefone ?? '').toString();
+    const telefoneOk = /^\d{10,11}$/.test(tel) && tel !== '00000000000';
+
+    const nasc = (u.data_nascimento ?? '').toString().slice(0, 10);
+    const nascimentoOk = !!nasc && nasc !== '1970-01-01';
+
+    const cpf = u.cpf ?? '';
+    const cpfOk = !cpf || /^\d{11}$/.test(cpf);
+
+    const nomeOk = typeof u.nome === 'string' && u.nome.trim().length >= 3;
+
+    return !(telefoneOk && nascimentoOk && cpfOk && nomeOk);
   }
 
 }
