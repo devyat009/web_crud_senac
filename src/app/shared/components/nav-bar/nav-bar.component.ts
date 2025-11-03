@@ -100,11 +100,14 @@ export class NavBarComponent implements OnInit {
 
   private isProfileIncomplete(u: any): boolean {
     if (!u) return true;
-    const telefoneOk = typeof u.telefone === 'string' && /^\d{10,11}$/.test(u.telefone);
-    const nascimentoOk = !!u.data_nascimento;
-    // CPF opcional, mas se existir, validar tamanho
-    const cpfOk = !u.cpf || (typeof u.cpf === 'string' && /^\d{11}$/.test(u.cpf));
-    return !(telefoneOk && nascimentoOk && cpfOk);
+    const tel = (u.telefone ?? '').toString();
+    const telefoneOk = /^\d{10,11}$/.test(tel) && tel !== '00000000000';
+    const nasc = (u.data_nascimento ?? '').toString().slice(0, 10);
+    const nascimentoOk = !!nasc && nasc !== '1970-01-01';
+    const cpf = u.cpf ?? '';
+    const cpfOk = !cpf || /^\d{11}$/.test(cpf);
+    const nomeOk = typeof u.nome === 'string' && u.nome.trim().length >= 3;
+    return !(telefoneOk && nascimentoOk && cpfOk && nomeOk);
   }
 
 }

@@ -5,10 +5,20 @@ import { UserService } from '../services/user.service';
 
 function isProfileIncomplete(u: any): boolean {
   if (!u) return true;
-  const telefoneOk = typeof u.telefone === 'string' && /^\d{10,11}$/.test(u.telefone);
-  const nascimentoOk = !!u.data_nascimento;
-  const cpfOk = !u.cpf || (typeof u.cpf === 'string' && /^\d{11}$/.test(u.cpf));
-  return !(telefoneOk && nascimentoOk && cpfOk);
+  const tel = (u.telefone ?? '').toString();
+  const telefoneOk = /^\d{10,11}$/.test(tel) && tel !== '00000000000';
+
+  const nasc = (u.data_nascimento ?? '').toString().slice(0, 10);
+  const nascimentoOk = !!nasc && nasc !== '1970-01-01';
+
+  // CPF continua opcional; se existir, valide 11 dígitos
+  const cpf = u.cpf ?? '';
+  const cpfOk = !cpf || /^\d{11}$/.test(cpf);
+
+  // Também exigir nome mínimo
+  const nomeOk = typeof u.nome === 'string' && u.nome.trim().length >= 3;
+
+  return !(telefoneOk && nascimentoOk && cpfOk && nomeOk);
 }
 
 export const profileCompleteGuard: CanActivateFn = async (_route, state) => {
