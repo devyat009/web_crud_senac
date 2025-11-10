@@ -5,13 +5,18 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../../shared/services/user.service';
 import { StorageService } from '../../../shared/services/storage.service';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-perfil',
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgxMaskDirective
+  ]
 })
 export class PerfilComponent implements OnInit {
   loading = true;
@@ -72,7 +77,18 @@ export class PerfilComponent implements OnInit {
     };
 
     try {
-      await this.userService.updateUser(payload);
+      const updatedUser = await this.userService.updateUser(payload);
+      // Atualiza o cache do usuário no localStorage/storage
+      const cached = this.storage.getItem('loggedInUser');
+      if (cached) {
+        const userCache = JSON.parse(cached);
+        // Atualiza os campos relevantes
+        userCache.nome = updatedUser?.nome ?? payload.nome;
+        userCache.telefone = updatedUser?.telefone ?? payload.telefone;
+        userCache.cpf = updatedUser?.cpf ?? payload.cpf;
+        userCache.data_nascimento = updatedUser?.data_nascimento ?? payload.data_nascimento;
+        this.storage.setItem('loggedInUser', JSON.stringify(userCache));
+      }
       this.snackBar.open('Dados atualizados!', 'Fechar', { duration: 2000 });
       this.router.navigate(['/home']);
     } catch (e: any) {
