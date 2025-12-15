@@ -84,7 +84,7 @@ export class ClientesModalComponent implements OnInit {
         endereco: formValue.endereco ?? '',
         telefone: formValue.telefone ?? '',
         data_nascimento: formValue.data_nascimento ?? '',
-        perfil: formValue.perfil ?? '',
+        perfil: formValue.perfil ?? 'user',
         ativo: formValue.ativo ?? true
       };
       if (this.data.isEdit && this.data.cliente?.id_client) {
