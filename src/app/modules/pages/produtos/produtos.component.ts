@@ -151,7 +151,8 @@ export class ProdutosComponent implements OnInit {
     const confirmed = await dialogRef.afterClosed().toPromise();
     if (confirmed) {
       try {
-        await this.productService.deleteProduct(produto.id);
+        console.log('Excluindo produto:', produto);
+        await this.productService.deleteProduct(produto.id_product);
         this.snackBar.open('Produto excluído com sucesso!', 'Fechar', {
           duration: 3000
         });

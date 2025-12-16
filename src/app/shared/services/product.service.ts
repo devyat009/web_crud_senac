@@ -45,8 +45,9 @@ export class ProductService {
   }
 
   async listProduct(): Promise<any> {
+    const params = new HttpParams().set('limit', '1000');
     return await lastValueFrom(
-      this.http.get<any>(this.baseUrl + 'api/v1/products')
+      this.http.get<any>(this.baseUrl + 'api/v1/products', { params })
     );
   }
 
